@@ -66,6 +66,14 @@ export function useGameEngine() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
+  const onKeyCorrect = useRef<(() => void) | undefined>(undefined);
+  const onKeyError = useRef<(() => void) | undefined>(undefined);
+  const onWordComplete = useRef<(() => void) | undefined>(undefined);
+  const onComboMax = useRef<(() => void) | undefined>(undefined);
+  const onComboMilestone = useRef<((combo: number) => void) | undefined>(undefined);
+  const onGameOver = useRef<(() => void) | undefined>(undefined);
+
+
   return { state, startGame: () => {}, handleInput: (_s: string) => {} };
 
-}  
+}
