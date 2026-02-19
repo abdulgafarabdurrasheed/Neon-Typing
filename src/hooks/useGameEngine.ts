@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import paragraphs from "../data/paragraphs";
-import { pre } from "framer-motion/client";
 
 export interface GameState {
   status: "idle" | "playing" | "gameover";
@@ -113,5 +112,65 @@ export function useGameEngine() {
     });
     onGameOver.current?.();
   }, [stopTimers]);
+
+  const startGame = useCallback(() => {
+    stopTimers();
+    const words = pickParagraph();
+    const now = Date.now();
+
+    setState({
+      status: "playing",
+      words,
+      currentWordIndex: 0,
+      typedChars: "",
+      correctChars: 0,
+      totalChars: 0,
+      errors: 0,
+      combo: 0,
+      maxCombo: 0,
+      comboMeter: 0,
+      isSuperSaiyan: false,
+      wpm: 0,
+      accuracy: 100,
+      startTime: now,
+      elapsed: 0,
+      health: INITIAL_HEALTH,
+      wordsCompleted: 0,
+      level: 1,
+      fallingSpeed: INITIAL_FALLING_SPEED,
+    });
+
+    timerRef.current = setInterval(() => {
+      setState((prev) => {
+        if (prev.status !== "playing" || !prev.startTime) return prev;
+        const elapsed = (Date.now() - prev.startTime) / 1000;
+        const minutes = elapsed / 60;
+        const wpm =
+          minutes > 0 ? Math.round(prev.correctChars / 5 / minutes) : 0;
+
+        return { ...prev, elapsed, wpm };
+      });
+    }, 500);
+
+    healthTimerRef.current = setInterval(() => {
+      setState((prev) => {
+        if (prev.status !== "playing") return prev;
+        const drain = HEALTH_DRAIN_PER_TICK + (prev.level - 1) * 0.5;
+        const newHealth = Math.max(0, prev.health - drain);
+        if (newHealth <= 0) return { ...prev, health: 0 };
+        return { ...prev, health: newHealth };
+      });
+
+      setTimeout(() => {
+        if (
+          stateRef.current.health <= 0 &&
+          stateRef.current.status === "playing"
+        ) {
+          endGame();
+        }
+      }, 0);
+    }, 1500);
+  }, [stopTimers, endGame]);
+
   return { state, startGame: () => {}, handleInput: (_s: string) => {} };
 }
