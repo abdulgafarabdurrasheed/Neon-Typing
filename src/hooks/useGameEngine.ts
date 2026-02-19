@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import paragraphs from "../data/paragraphs";
+import { pre } from "framer-motion/client";
 
 export interface GameState {
   status: "idle" | "playing" | "gameover";
@@ -70,10 +71,47 @@ export function useGameEngine() {
   const onKeyError = useRef<(() => void) | undefined>(undefined);
   const onWordComplete = useRef<(() => void) | undefined>(undefined);
   const onComboMax = useRef<(() => void) | undefined>(undefined);
-  const onComboMilestone = useRef<((combo: number) => void) | undefined>(undefined);
+  const onComboMilestone = useRef<((combo: number) => void) | undefined>(
+    undefined,
+  );
   const onGameOver = useRef<(() => void) | undefined>(undefined);
 
+  const stopTimers = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (healthTimerRef.current) clearInterval(healthTimerRef.current);
+    if (superSaiyanTimerRef.current) clearTimeout(superSaiyanTimerRef.current);
+    timerRef.current = null;
+    healthTimerRef.current = null;
+    superSaiyanTimerRef.current = null;
+  }, []);
 
+  const endGame = useCallback(() => {
+    stopTimers();
+    setState((prev) => {
+      const elapsed = prev.startTime ? (Date.now() - prev.startTime) / 1000 : 0;
+      const minutes = elapsed / 60;
+      const wpm = minutes > 0 ? Math.round(prev.correctChars / 5 / minutes) : 0;
+      const accuracy =
+        prev.totalChars > 0
+          ? Math.round((prev.correctChars / prev.totalChars) * 100)
+          : 100;
+
+      const best = JSON.parse(localStorage.getItem("neontype-best") || "{}");
+      if (!best.wpm || wpm > best.wpm) {
+        localStorage.setItem(
+          "neontype-best",
+          JSON.stringify({
+            wpm,
+            accuracy,
+            combo: prev.maxCombo,
+            words: prev.wordsCompleted,
+          }),
+        );
+      }
+
+      return { ...prev, status: "gameover", wpm, accuracy, elapsed };
+    });
+    onGameOver.current?.();
+  }, [stopTimers]);
   return { state, startGame: () => {}, handleInput: (_s: string) => {} };
-
 }
