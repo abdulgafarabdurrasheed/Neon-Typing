@@ -173,7 +173,7 @@ export function useGameEngine() {
   }, [stopTimers, endGame]);
 
   const handleInput = useCallback((input: string) => {
-    setState(prev => {
+    setState((prev) => {
       if (prev.status !== "playing") return prev;
 
       const currentWord = prev.words[prev.currentWordIndex];
@@ -183,13 +183,15 @@ export function useGameEngine() {
       const totalChars = prev.totalChars + 1;
 
       const lastCharIndex = newTypedChars.length - 1;
-      const isCorrect = lastCharIndex >= 0 && newTypedChars[lastCharIndex] === currentWord[lastCharIndex];
+      const isCorrect =
+        lastCharIndex >= 0 &&
+        newTypedChars[lastCharIndex] === currentWord[lastCharIndex];
 
-      let correctChars = prev.correctChars
-      let errors = prev.errors
-      let combo = prev.combo
-      let maxCombo = prev.maxCombo
-      let comboMeter = prev.comboMeter
+      let correctChars = prev.correctChars;
+      let errors = prev.errors;
+      let combo = prev.combo;
+      let maxCombo = prev.maxCombo;
+      let comboMeter = prev.comboMeter;
       let isSuperSaiyan = prev.isSuperSaiyan;
 
       if (isCorrect) {
@@ -206,7 +208,52 @@ export function useGameEngine() {
         combo = 0;
         comboMeter = Math.max(0, comboMeter - COMBO_DRAIN_ON_ERROR);
         isSuperSaiyan = false;
-        onKeyError.current?.()
+        onKeyError.current?.();
+      }
+
+      if (newTypedChars === currentWord) {
+        const nextIndex = prev.currentWordIndex + 1;
+        const wordsCompleted = prev.wordsCompleted + 1;
+        const newComboMeter = Math.min(100, comboMeter + COMBO_FILL_PER_WORD);
+        const health = Math.min(100, prev.health + HEALTH_RESTORE_PER_WORD);
+        const level = Math.floor(wordsCompleted / 10) + 1;
+        onWordComplete.current?.();
+
+        let newSuperSaiyan = isSuperSaiyan;
+        if (newComboMeter >= 100 && !isSuperSaiyan) {
+          newSuperSaiyan = true;
+          onComboMax.current?.();
+
+          if (superSaiyanTimerRef.current)
+            clearTimeout(superSaiyanTimerRef.current);
+          superSaiyanTimerRef.current = setTimeout(() => {
+            setState((p) => ({ ...p, isSuperSaiyan: false, comboMeter: 50 }));
+          }, SUPER_SAIYAN_DURATION);
+        }
+
+        let words = prev.words;
+        let currentWordIndex = nextIndex;
+        if (nextIndex >= prev.words.length) {
+          words = pickParagraph();
+          currentWordIndex = 0;
+        }
+        return {
+          ...prev,
+          words,
+          currentWordIndex,
+          typedChars: "",
+          correctChars,
+          totalChars,
+          errors,
+          combo,
+          maxCombo,
+          comboMeter: newComboMeter,
+          isSuperSaiyan: newSuperSaiyan,
+          health,
+          wordsCompleted,
+          level,
+          fallingSpeed: Math.max(800, INITIAL_FALLING_SPEED - level * 200),
+        };
       }
 
       return {
