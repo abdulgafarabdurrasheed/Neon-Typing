@@ -172,5 +172,56 @@ export function useGameEngine() {
     }, 1500);
   }, [stopTimers, endGame]);
 
+  const handleInput = useCallback((input: string) => {
+    setState(prev => {
+      if (prev.status !== "playing") return prev;
+
+      const currentWord = prev.words[prev.currentWordIndex];
+      if (!currentWord) return prev;
+
+      const newTypedChars = input;
+      const totalChars = prev.totalChars + 1;
+
+      const lastCharIndex = newTypedChars.length - 1;
+      const isCorrect = lastCharIndex >= 0 && newTypedChars[lastCharIndex] === currentWord[lastCharIndex];
+
+      let correctChars = prev.correctChars
+      let errors = prev.errors
+      let combo = prev.combo
+      let maxCombo = prev.maxCombo
+      let comboMeter = prev.comboMeter
+      let isSuperSaiyan = prev.isSuperSaiyan;
+
+      if (isCorrect) {
+        correctChars++;
+        combo++;
+        maxCombo = Math.max(maxCombo, combo);
+        onKeyCorrect.current?.();
+
+        if (combo > 0 && combo % 50 === 0) {
+          onComboMilestone.current?.(combo);
+        }
+      } else if (newTypedChars.length > 0) {
+        errors++;
+        combo = 0;
+        comboMeter = Math.max(0, comboMeter - COMBO_DRAIN_ON_ERROR);
+        isSuperSaiyan = false;
+        onKeyError.current?.()
+      }
+
+      return {
+        ...prev,
+        typedChars: newTypedChars,
+        correctChars,
+        totalChars,
+        errors,
+        combo,
+        maxCombo,
+        comboMeter,
+        isSuperSaiyan,
+      };
+    });
+  }, []);
+
   return { state, startGame: () => {}, handleInput: (_s: string) => {} };
 }
