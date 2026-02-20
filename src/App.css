@@ -335,3 +335,75 @@ html, body {
   0%, 50% { border-color: var(--neon-green); }
   51%, 100% { border-color: transparent; }
 }
+
+.combo-meter-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.3rem 0;
+}
+
+.combo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 70px;
+}
+
+.combo-label { font-size: 0.55rem; letter-spacing: 2px; color: var(--text-dim); }
+
+.combo-number {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--neon-green);
+}
+
+.combo-number.hot {
+  color: var(--neon-yellow);
+  text-shadow: 0 0 10px rgba(245, 245, 32, 0.5);
+}
+
+.combo-number.fire {
+  color: var(--neon-pink);
+  text-shadow: 0 0 15px rgba(255, 0, 110, 0.7);
+}
+
+.combo-bar-track {
+  flex: 1; height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px; overflow: hidden;
+  border: 1px solid rgba(57, 255, 20, 0.1);
+  position: relative;
+}
+
+.combo-bar-fill {
+  height: 100%; border-radius: 4px;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.3);
+}
+
+.combo-bar-fill.super-saiyan {
+  box-shadow:
+    0 0 15px rgba(255, 0, 110, 0.5),
+    0 0 30px rgba(255, 0, 110, 0.3);
+}
+
+.super-saiyan-label {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 0.6rem; font-weight: 700;
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px rgba(255, 0, 110, 0.8);
+  white-space: nowrap; letter-spacing: 2px;
+}
+
+.level-badge {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; min-width: 50px; padding: 4px 10px;
+  border: 1px solid rgba(57, 255, 20, 0.2);
+  border-radius: 6px;
+  background: rgba(57, 255, 20, 0.03);
+}
