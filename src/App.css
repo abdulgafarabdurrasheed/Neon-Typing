@@ -407,3 +407,60 @@ html, body {
   border-radius: 6px;
   background: rgba(57, 255, 20, 0.03);
 }
+
+.input-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: rgba(10, 10, 20, 0.7);
+  border: 1px solid rgba(57, 255, 20, 0.15);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  backdrop-filter: blur(5px);
+}
+
+.input-prefix {
+  color: var(--neon-green);
+  font-weight: 700;
+  opacity: 0.6; 
+}
+
+.input-text {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+  letter-spacing: 1px;
+  min-height: 1.4em;
+}
+
+.end-screen-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(5, 5, 10, 0.92);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 800;
+}
+
+.end-screen-card {
+  background: linear-gradient(135deg, var(--bg-card) 0%, #0f0f1f 100%);
+  border: 1px solid rgba(57, 255, 20, 0.2);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  overflow: hidden;
+}
+
+.end-screen-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-green), var(--neon-pink), var(--neon-cyan));
+}
