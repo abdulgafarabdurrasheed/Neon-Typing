@@ -276,3 +276,62 @@ html, body {
   align-items: baseline;
   line-height: 2.2;
 }
+
+.word {
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+  position: relative
+}
+
+.word.current {
+  font-weight: 700;
+  font-size: 1.7rem;
+  padding: 4px, 8px;
+  border-radius: 6px;
+  background: rgba(57, 255, 20, 0.05);
+  border: 1px solid rgba(57, 255, 20, 0.15);
+}
+
+.word.past {
+  text-decoration: line-through;
+  opacity: 0.2;
+}
+
+.word.future {
+  color: var(--text-dim);
+}
+
+.char { position: relative; transition: color 0.1s; color: var(--text-dim); }
+
+.char.correct {
+  color: var(--neon-green);
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+}
+
+.char.wrong {
+  color: var(--danger);
+  text-shadow: 0 0 8px rgba(255, 0, 64, 0.5);
+  text-decoration: underline;
+  text-decoration-color: var(--danger);
+  animation: char-wrong 0.15s ease-in-out;
+}
+
+@keyframes char-wrong {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.char.cursor {
+  border-left: 2px solid var(--neon-green);
+  animation: cursor-blink 0.8s infinite;
+  margin-left: -1px;
+  padding-left: 1px;
+}
+
+@keyframes cursor-blink {
+  0%, 50% { border-color: var(--neon-green); }
+  51%, 100% { border-color: transparent; }
+}
