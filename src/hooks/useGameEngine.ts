@@ -270,5 +270,18 @@ export function useGameEngine() {
     });
   }, []);
 
-  return { state, startGame: () => {}, handleInput: (_s: string) => {} };
+  useEffect(() => () => stopTimers(), [stopTimers]);
+
+  return { 
+    state,
+    startGame,
+    endGame,
+    handleInput,
+    onKeyCorrect,
+    onKeyError,
+    onWordComplete,
+    onComboMax,
+    onComboMilestone,
+    onGameOver,
+   };
 }
