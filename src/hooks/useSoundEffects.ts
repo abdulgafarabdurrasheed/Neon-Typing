@@ -117,4 +117,71 @@ class SoundEngine {
       osc.stop(start + 0.15);
     });
   }
+
+  playSuperSaiyan() {
+    const ctx = this.getCtx();
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(100, now);
+    osc.frequency.exponentialRampToValueAtTime(800, now + 0.5);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+    osc.connect(gain).connect(this.getMaster());
+    osc.start(now);
+    osc.stop(now + 0.6);
+
+    const osc2 = ctx.createOscillator();
+    osc2.type = "square";
+    osc2.frequency.setValueAtTime(200, now);
+    osc2.frequency.exponentialRampToValueAtTime(1600, now + 0.5);
+
+    const gain2 = ctx.createGain();
+    gain2.gain.setValueAtTime(0.02, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+    osc2.connect(gain2).connect(this.getMaster());
+    osc2.start(now);
+    osc2.stop(now + 0.5);
+  }
+
+  playGameOver() {
+    const ctx = this.getCtx();
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(400, now);
+    osc.frequency.exponentialRampToValueAtTime(40, now + 1.5);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.linearRampToValueAtTime(0.06, now + 0.8);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+    osc.connect(gain).connect(this.getMaster());
+    osc.start(now);
+    osc.stop(now + 1.5);
+
+    const noiseLen = ctx.sampleRate * 1.2;
+    const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < noiseLen; i++) {
+      d[i] = (Math.random() * 2 - 1) * (1 - i / noiseLen) * 0.5;
+    }
+    const ns = ctx.createBufferSource();
+    ns.buffer = noiseBuf;
+
+    const ng = ctx.createGain();
+    ng.gain.setValueAtTime(0.04, now);
+    ng.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+    ns.connect(ng).connect(this.getMaster());
+    ns.start(now);
+    ns.stop(now + 1.2);
+  }
 }
