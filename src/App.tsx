@@ -11,6 +11,7 @@ import "./App.css";
 import BackgroundFX from "./components/BackgroundFX";
 import ParticleEmitter from "./components/ParticleCanvas";
 import { useSoundEffects } from "./hooks/useSoundEffects";
+import confetti from "canvas-confetti";
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -59,6 +60,16 @@ function App() {
     };
     onWordCompleteRef.current = (word: string) => {
       sound.playWordComplete();
+      confetti({
+        particleCount: 8,
+        spread: 40,
+        origin: { y: 0.6 },
+        colors: ["#39ff14", "#00f0ff", "#f5f520"],
+        gravity: 1.5,
+        ticks: 80,
+        scalar: 0.6,
+        disableForReducedMotion: true,
+      });
       const wordEl = wordDisplayRef.current?.querySelector(".word.current");
       if (wordEl && emitterRef.current) {
         const rect = wordEl.getBoundingClientRect();
@@ -70,7 +81,23 @@ function App() {
         );
       }
     };
-    onComboMaxRef.current = () => sound.playSuperSaiyan();
+
+    onComboMaxRef.current = () => {
+      sound.playSuperSaiyan();
+      const duration = 1000;
+      const end = Date.now() + duration;
+      const interval = setInterval(() => {
+        confetti({
+          particleCount: 30,
+          angle: 60 + Math.random() * 60,
+          spread: 80,
+          origin: { x: Math.random(), y: Math.random() * 0.5 },
+          colors: ["#ff006e", "#bf00ff", "#f5f520", "#00f0ff"],
+        });
+        if (Date.now() > end) clearInterval(interval);
+      }, 100);
+    }
+
     onComboMilestoneRef.current = (c: number) => sound.playComboCallout(c);
     onGameOverRef.current = () => sound.playGameOver();
   });
