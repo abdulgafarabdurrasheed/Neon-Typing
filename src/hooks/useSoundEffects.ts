@@ -208,3 +208,22 @@ class SoundEngine {
     speechSynthesis.speak(utterance);
   }
 }
+
+
+export function useSoundEffects() {
+    const engineRef = useRef<SoundEngine | null>(null);
+
+    const getEngine = useCallback(() => {
+        if (!engineRef.current) engineRef.current = new SoundEngine();
+        return engineRef.current;
+    }, []);
+
+    return {
+        playThock: useCallback(() => getEngine().playThock(), [getEngine]),
+        playError: useCallback(() => getEngine().playError(), [getEngine]),
+        playWordComplete: useCallback(() => getEngine().playWordComplete(), [getEngine]),
+        playSuperSaiyan: useCallback(() => getEngine().playSuperSaiyan(), [getEngine]),
+        playGameOver: useCallback(() => getEngine().playGameOver(), [getEngine]),
+        playComboCallout: useCallback((c: number) => getEngine().playComboCallout(c), [getEngine]),
+    };
+}

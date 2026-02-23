@@ -10,6 +10,7 @@ import IntroOverlay from "./components/IntroOverlay";
 import "./App.css";
 import BackgroundFX from "./components/BackgroundFX";
 import ParticleEmitter from "./components/ParticleCanvas";
+import { useSoundEffects } from "./hooks/useSoundEffects";
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -22,39 +23,17 @@ function App() {
     state,
     startGame,
     handleInput,
-    onKeyCorrect,
-    onKeyError,
-    onWordComplete,
-    onComboMax,
-    onComboMilestone,
-    onGameOver,
+    onKeyCorrectRef,
+    onKeyErrorRef,
+    onWordCompleteRef,
+    onComboMaxRef,
+    onComboMilestoneRef,
+    onGameOverRef,
   } = useGameEngine();
-
-  useEffect(() => {
-    onKeyError.current = () => {
-      setShake(true);
-      setTimeout(() => setShake(false), 200);
-    };
-  });
 
   useEffect(() => {
     emitterRef.current = ParticleEmitter.getInstance();
   }, []);
-
-  useEffect(() => {
-    onWordComplete.current = (word: string) => {
-      const wordEl = wordDisplayRef.current?.querySelector(".word.current");
-      if (wordEl && emitterRef.current) {
-        const rect = wordEl.getBoundingClientRect();
-        emitterRef.current.explode(
-          rect.left + rect.width / 2,
-          rect.top + rect.height / 2,
-          word,
-          state.isSuperSaiyan,
-        );
-      }
-    };
-  });
 
   useEffect(() => {
     if (state.status === "playing") inputRef.current?.focus();
@@ -68,6 +47,33 @@ function App() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [state.status, startGame]);
+
+  const sound = useSoundEffects();
+
+  useEffect(() => {
+    onKeyCorrectRef.current = () => sound.playThock();
+    onKeyErrorRef.current = () => {
+      sound.playError();
+      setShake(true);
+      setTimeout(() => setShake(false), 200);
+    };
+    onWordCompleteRef.current = (word: string) => {
+      sound.playWordComplete();
+      const wordEl = wordDisplayRef.current?.querySelector(".word.current");
+      if (wordEl && emitterRef.current) {
+        const rect = wordEl.getBoundingClientRect();
+        emitterRef.current.explode(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2,
+          word,
+          state.isSuperSaiyan,
+        );
+      }
+    };
+    onComboMaxRef.current = () => sound.playSuperSaiyan();
+    onComboMilestoneRef.current = (c: number) => sound.playComboCallout(c);
+    onGameOverRef.current = () => sound.playGameOver();
+  });
 
   const onInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

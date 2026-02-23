@@ -66,14 +66,14 @@ export function useGameEngine() {
   const stateRef = useRef(state);
   stateRef.current = state;
 
-  const onKeyCorrect = useRef<(() => void) | undefined>(undefined);
-  const onKeyError = useRef<(() => void) | undefined>(undefined);
-  const onWordComplete = useRef<(() => void) | undefined>(undefined);
-  const onComboMax = useRef<(() => void) | undefined>(undefined);
-  const onComboMilestone = useRef<((combo: number) => void) | undefined>(
+  const onKeyCorrectRef = useRef<(() => void) | undefined>(undefined);
+  const onKeyErrorRef = useRef<(() => void) | undefined>(undefined);
+  const onWordCompleteRef = useRef<((word: string) => void) | undefined>(undefined);
+  const onComboMaxRef = useRef<(() => void) | undefined>(undefined);
+  const onComboMilestoneRef = useRef<((combo: number) => void) | undefined>(
     undefined,
   );
-  const onGameOver = useRef<(() => void) | undefined>(undefined);
+  const onGameOverRef = useRef<(() => void) | undefined>(undefined);
 
   const stopTimers = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -110,7 +110,7 @@ export function useGameEngine() {
 
       return { ...prev, status: "gameover", wpm, accuracy, elapsed };
     });
-    onGameOver.current?.();
+    onGameOverRef.current?.();
   }, [stopTimers]);
 
   const startGame = useCallback(() => {
@@ -198,17 +198,17 @@ export function useGameEngine() {
         correctChars++;
         combo++;
         maxCombo = Math.max(maxCombo, combo);
-        onKeyCorrect.current?.();
+        onKeyCorrectRef.current?.();
 
         if (combo > 0 && combo % 50 === 0) {
-          onComboMilestone.current?.(combo);
+          onComboMilestoneRef.current?.(combo);
         }
       } else if (newTypedChars.length > 0) {
         errors++;
         combo = 0;
         comboMeter = Math.max(0, comboMeter - COMBO_DRAIN_ON_ERROR);
         isSuperSaiyan = false;
-        onKeyError.current?.();
+        onKeyErrorRef.current?.();
       }
 
       if (newTypedChars === currentWord) {
@@ -217,12 +217,12 @@ export function useGameEngine() {
         const newComboMeter = Math.min(100, comboMeter + COMBO_FILL_PER_WORD);
         const health = Math.min(100, prev.health + HEALTH_RESTORE_PER_WORD);
         const level = Math.floor(wordsCompleted / 10) + 1;
-        onWordComplete.current?.();
+        onWordCompleteRef.current?.(currentWord);
 
         let newSuperSaiyan = isSuperSaiyan;
         if (newComboMeter >= 100 && !isSuperSaiyan) {
           newSuperSaiyan = true;
-          onComboMax.current?.();
+          onComboMaxRef.current?.();
 
           if (superSaiyanTimerRef.current)
             clearTimeout(superSaiyanTimerRef.current);
@@ -277,11 +277,11 @@ export function useGameEngine() {
     startGame,
     endGame,
     handleInput,
-    onKeyCorrect,
-    onKeyError,
-    onWordComplete,
-    onComboMax,
-    onComboMilestone,
-    onGameOver,
+    onKeyCorrectRef,
+    onKeyErrorRef,
+    onWordCompleteRef,
+    onComboMaxRef,
+    onComboMilestoneRef,
+    onGameOverRef,
    };
 }
