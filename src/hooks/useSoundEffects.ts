@@ -184,4 +184,27 @@ class SoundEngine {
     ns.start(now);
     ns.stop(now + 1.2);
   }
+
+  playComboCallout(combo: number) {
+    const milestones: Record<number, string> = {
+        50: "fifty combo!",
+        100: "one hundred combo! UNSTOPPABLE",
+        150: "one fifty! GODLIKE",
+        200: "two hundred! INHUMAN",
+        250: "two fifty! SUPER SAIYAN",
+        300: "three hundred! ULTRA INSTINCT",
+        400: "four hundred! DIVINE INTERVENTION",
+        500: "five hundred! LEGENDARY"
+    };
+
+    const callout = milestones[combo];
+    if (!callout) return;
+
+    const utterance = new SpeechSynthesisUtterance(callout);
+    utterance.rate = 1.3;
+    utterance.pitch = 0.6;
+    utterance.volume = 0.7;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
+  }
 }
