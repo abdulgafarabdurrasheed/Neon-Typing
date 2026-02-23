@@ -8,7 +8,7 @@ class SoundEngine {
     if (!this.ctx) {
       this.ctx = new AudioContext();
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.value = 0.3;
+      this.masterGain.gain.value = 0.7;
       this.masterGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === "suspended") this.ctx.resume();
@@ -41,7 +41,7 @@ class SoundEngine {
     bandpass.Q.value = 1.5;
 
     const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.15, now);
+    noiseGain.gain.setValueAtTime(0.35, now);
     noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
 
     noise.connect(bandpass).connect(noiseGain).connect(this.getMaster());
@@ -54,7 +54,7 @@ class SoundEngine {
     osc.frequency.exponentialRampToValueAtTime(50, now + 0.05);
 
     const oscGain = ctx.createGain();
-    oscGain.gain.setValueAtTime(0.08, now);
+    oscGain.gain.setValueAtTime(0.2, now);
     oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
     osc.connect(oscGain).connect(this.getMaster());
@@ -72,7 +72,7 @@ class SoundEngine {
     osc.frequency.linearRampToValueAtTime(70, now + 0.15);
 
     const errGain = ctx.createGain();
-    errGain.gain.setValueAtTime(0.06, now);
+    errGain.gain.setValueAtTime(0.15, now);
     errGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
 
     const noiseLen = ctx.sampleRate * 0.1;
@@ -85,7 +85,7 @@ class SoundEngine {
     noiseNode.buffer = noiseBuf;
 
     const noiseGain = ctx.createGain();
-    noiseGain.gain.setValueAtTime(0.04, now);
+    noiseGain.gain.setValueAtTime(0.1, now);
     noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
 
     osc.connect(errGain).connect(this.getMaster());
@@ -109,7 +109,7 @@ class SoundEngine {
       const noteGain = ctx.createGain();
       const start = now + i * 0.06;
       noteGain.gain.setValueAtTime(0, start);
-      noteGain.gain.linearRampToValueAtTime(0.08, start + 0.02);
+      noteGain.gain.linearRampToValueAtTime(0.8, start + 0.02);
       noteGain.gain.exponentialRampToValueAtTime(0.001, start + 0.15);
 
       osc.connect(noteGain).connect(this.getMaster());
@@ -128,7 +128,7 @@ class SoundEngine {
     osc.frequency.exponentialRampToValueAtTime(800, now + 0.5);
 
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.setValueAtTime(0.12, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
 
     osc.connect(gain).connect(this.getMaster());
@@ -141,7 +141,7 @@ class SoundEngine {
     osc2.frequency.exponentialRampToValueAtTime(1600, now + 0.5);
 
     const gain2 = ctx.createGain();
-    gain2.gain.setValueAtTime(0.02, now);
+    gain2.gain.setValueAtTime(0.06, now);
     gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
 
     osc2.connect(gain2).connect(this.getMaster());
@@ -159,8 +159,8 @@ class SoundEngine {
     osc.frequency.exponentialRampToValueAtTime(40, now + 1.5);
 
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.linearRampToValueAtTime(0.06, now + 0.8);
+    gain.gain.setValueAtTime(0.18, now);
+    gain.gain.linearRampToValueAtTime(0.14, now + 0.8);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
 
     osc.connect(gain).connect(this.getMaster());
@@ -177,7 +177,7 @@ class SoundEngine {
     ns.buffer = noiseBuf;
 
     const ng = ctx.createGain();
-    ng.gain.setValueAtTime(0.04, now);
+    ng.gain.setValueAtTime(0.1, now);
     ng.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
 
     ns.connect(ng).connect(this.getMaster());
@@ -203,7 +203,7 @@ class SoundEngine {
     const utterance = new SpeechSynthesisUtterance(callout);
     utterance.rate = 1.3;
     utterance.pitch = 0.6;
-    utterance.volume = 0.7;
+    utterance.volume = 1.0;
     speechSynthesis.cancel();
     speechSynthesis.speak(utterance);
   }
