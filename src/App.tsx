@@ -106,7 +106,9 @@ function App() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
       if (val.endsWith(" ")) {
-        handleInput(val.trimEnd());
+        const trimmed = val.trimEnd();
+        if (trimmed.length === 0) return
+        handleInput(trimmed);
         return;
       }
       handleInput(val);

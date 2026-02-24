@@ -82,6 +82,43 @@ export default function EndScreen({
               ⭐ NEW PERSONAL BEST ⭐
             </motion.div>
           )}
+
+          <div className="end-stats">
+            <div className="stat">
+              <span className="stat-label">WPM</span>
+              <span className="stat-value">{wpm}</span>
+            </div>
+            <div className="stat">
+              <span className="stat-label">Accuracy</span>
+              <span className="stat-value">{accuracy}%</span>
+            </div>
+            <div className="stat">
+              <span className="stat-label">Max Combo</span>
+              <span className="stat-value">{combo}</span>
+            </div>
+            <div className="stat">
+              <span className="stat-label">Words Completed</span>
+              <span className="stat-value">{wordsCompleted}</span>
+            </div>
+            <div className="stat">
+              <span className="stat-label">Time Elapsed</span>
+              <span className="stat-value">{formatTime(elapsed)}</span>
+            </div>
+            <div className="stat">
+              <span className="stat-label">Percentile</span>
+              <span className="stat-value">{percentile}th</span>
+            </div>
+            <div className="stat">
+              <span className="stat-label">Rank</span>
+              <span className="stat-value" style={{ color: rank.color }}>
+                {rank.emoji} {rank.name}
+              </span>
+            </div>
+          </div>
+
+          <button className="restart-btn" onClick={onRestart}>
+            RESTART [ENTER]
+          </button>
         </motion.div>
 
       </motion.div>

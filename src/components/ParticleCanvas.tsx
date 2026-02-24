@@ -14,7 +14,6 @@ class ParticleEmitter {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private particles: ExplosionParticle[] = [];
-  private animId = 0;
   private running = false;
 
   private constructor() {
@@ -121,7 +120,7 @@ class ParticleEmitter {
       this.ctx.globalAlpha = 1;
 
       if (this.particles.length > 0) {
-        this.animId = requestAnimationFrame(frame);
+        requestAnimationFrame(frame);
       } else {
         this.running = false;
       }
