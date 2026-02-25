@@ -605,7 +605,6 @@ html, body {
 .intro-step-desc {
   font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.6px;
   max-width: 350px;
 }
 
