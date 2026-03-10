@@ -12,6 +12,7 @@ import BackgroundFX from "./components/BackgroundFX";
 import ParticleEmitter from "./components/ParticleCanvas";
 import { useSoundEffects } from "./hooks/useSoundEffects";
 import confetti from "canvas-confetti";
+import type { Difficulty } from "./data/paragraphs"
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -42,7 +43,7 @@ function App() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (state.status === "gameover" && e.key === "Enter") startGame();
+      if (state.status === "gameover" && e.key === "Enter") startGame(state.difficulty);
       if (state.status === "playing") inputRef.current?.focus();
     };
     window.addEventListener("keydown", handler);
@@ -116,9 +117,9 @@ function App() {
     [handleInput],
   );
 
-  const handleDismissIntro = useCallback(() => {
+  const handleDismissIntro = useCallback((difficulty: Difficulty) => {
     setShowIntro(false);
-    startGame();
+    startGame(difficulty);
     setTimeout(() => inputRef.current?.focus(), 100);
   }, [startGame]);
 
@@ -187,7 +188,7 @@ function App() {
                 combo={state.maxCombo}
                 wordsCompleted={state.wordsCompleted}
                 elapsed={state.elapsed}
-                onRestart={startGame}
+                onRestart={() => startGame(state.difficulty)}
               />
             )}
           </AnimatePresence>

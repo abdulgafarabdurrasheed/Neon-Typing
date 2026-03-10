@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import paragraphs from "../data/paragraphs";
+import paragraphs, { type Difficulty } from "../data/paragraphs";
 
 export interface GameState {
   status: "idle" | "playing" | "gameover";
@@ -21,23 +21,29 @@ export interface GameState {
   wordsCompleted: number;
   level: number;
   fallingSpeed: number;
+  difficulty: Difficulty;
 }
 
 const INITIAL_HEALTH = 100;
 const INITIAL_FALLING_SPEED = 3000;
 const COMBO_FILL_PER_WORD = 8;
-const COMBO_DRAIN_ON_ERROR = 25;
-const HEALTH_DRAIN_PER_TICK = 2;
-const HEALTH_RESTORE_PER_WORD = 3;
 const SUPER_SAIYAN_DURATION = 5000;
 
-function pickParagraph(): string[] {
-  return [...paragraphs[Math.floor(Math.random() * paragraphs.length)]];
+const DIFFICULTY_CONFIG = {
+  easy: { healthDrain: 2, healthRestore: 3, comboDrain: 25, errorPenalty: 0 },
+  medium: { healthDrain: 3, healthRestore: 2.5, comboDrain: 30, errorPenalty: 0 },
+  hard: { healthDrain: 4, healthRestore: 2, comboDrain: 35, errorPenalty: 1 },
+};
+
+function pickParagraph(difficulty: Difficulty): string[] {
+  const pool = paragraphs[difficulty];
+  return [...pool[Math.floor(Math.random() * pool.length)]];
 }
 
 export function useGameEngine() {
   const [state, setState] = useState<GameState>({
     status: "idle",
+    difficulty: "easy",
     words: [],
     currentWordIndex: 0,
     typedChars: "",
@@ -113,13 +119,14 @@ export function useGameEngine() {
     onGameOverRef.current?.();
   }, [stopTimers]);
 
-  const startGame = useCallback(() => {
+  const startGame = useCallback((difficulty: Difficulty = "easy") => {
     stopTimers();
-    const words = pickParagraph();
+    const words = pickParagraph(difficulty);
     const now = Date.now();
 
     setState({
       status: "playing",
+      difficulty,
       words,
       currentWordIndex: 0,
       typedChars: "",
@@ -155,7 +162,8 @@ export function useGameEngine() {
     healthTimerRef.current = setInterval(() => {
       setState((prev) => {
         if (prev.status !== "playing") return prev;
-        const drain = HEALTH_DRAIN_PER_TICK + (prev.level - 1) * 0.5;
+        const config = DIFFICULTY_CONFIG[prev.difficulty];
+        const drain = config.healthDrain + (prev.level - 1) * 0.5;
         const newHealth = Math.max(0, prev.health - drain);
         if (newHealth <= 0) return { ...prev, health: 0 };
         return { ...prev, health: newHealth };
@@ -204,9 +212,10 @@ export function useGameEngine() {
           onComboMilestoneRef.current?.(combo);
         }
       } else if (newTypedChars.length > 0) {
+        const config = DIFFICULTY_CONFIG[prev.difficulty];
         errors++;
         combo = 0;
-        comboMeter = Math.max(0, comboMeter - COMBO_DRAIN_ON_ERROR);
+        comboMeter = Math.max(0, comboMeter - config.comboDrain);
         isSuperSaiyan = false;
         onKeyErrorRef.current?.();
       }
@@ -215,7 +224,8 @@ export function useGameEngine() {
         const nextIndex = prev.currentWordIndex + 1;
         const wordsCompleted = prev.wordsCompleted + 1;
         const newComboMeter = Math.min(100, comboMeter + COMBO_FILL_PER_WORD);
-        const health = Math.min(100, prev.health + HEALTH_RESTORE_PER_WORD);
+        const cfg = DIFFICULTY_CONFIG[prev.difficulty];
+        const health = Math.min(100, prev.health + cfg.healthRestore);
         const level = Math.floor(wordsCompleted / 10) + 1;
         onWordCompleteRef.current?.(currentWord);
 
@@ -234,7 +244,7 @@ export function useGameEngine() {
         let words = prev.words;
         let currentWordIndex = nextIndex;
         if (nextIndex >= prev.words.length) {
-          words = pickParagraph();
+          words = pickParagraph(prev.difficulty);
           currentWordIndex = 0;
         }
         return {

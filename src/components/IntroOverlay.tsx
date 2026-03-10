@@ -1,8 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import type { Difficulty } from "../data/paragraphs"
 
 interface Props {
-  onDismiss: () => void;
+  onDismiss: (difficulty: Difficulty) => void;
 }
 
 const steps = [
@@ -31,6 +32,7 @@ const steps = [
 export default function IntroOverlay({ onDismiss }: Props) {
   const [step, setStep] = useState(0);
   const [show, setShow] = useState(true);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -39,13 +41,13 @@ export default function IntroOverlay({ onDismiss }: Props) {
         if (step < steps.length - 1) setStep((s) => s + 1);
         else {
           setShow(false);
-          setTimeout(onDismiss, 500);
+          setTimeout(() => onDismiss(difficulty), 500);
         }
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [step, onDismiss]);
+  }, [step, onDismiss, difficulty]);
 
   return (
     <AnimatePresence>
@@ -84,6 +86,28 @@ export default function IntroOverlay({ onDismiss }: Props) {
                 <p className="intro-step-desc">{steps[step].desc}</p>
               </motion.div>
             </AnimatePresence>
+
+            {step === steps.length - 1 && (
+              <div className="difficulty-selector">
+                <p className="difficulty-label">SELECT DIFFICULTY</p>
+                <div className="difficulty-buttons">
+                  {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
+                    <button
+                      key={d}
+                      className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
+                      onClick={() => setDifficulty(d)}
+                    >
+                      <span className="diff-name">{d.toUpperCase()}</span>
+                      <span className="diff-desc">
+                        {d === "easy" && "Lowercase only"}
+                        {d === "medium" && "Mixed case, longer words"}
+                        {d === "hard" && "Special characters & symbols"}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="intro-dots">
               {steps.map((_, i) => (

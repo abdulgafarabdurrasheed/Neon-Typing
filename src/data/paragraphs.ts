@@ -1,5 +1,7 @@
 // 50 cyberpunk / hacker-themed paragraphs broken into word arrays
-const paragraphs: string[][] = [
+export type Difficulty = "easy" | "medium" | "hard";
+
+const easy: string[][] = [
   "the neon lights flicker above the rain soaked streets as data streams through fiber optic veins beneath the city",
   "encrypted packets race through the backbone of a dying internet while hackers dance with firewalls in the dark",
   "your fingers fly across the mechanical keyboard each keystroke a bullet fired into the digital void",
@@ -51,5 +53,49 @@ const paragraphs: string[][] = [
   "your typing speed is your superpower in this digital battlefield every word per minute counts",
   "game over insert coin to continue or just refresh the page because this is the modern arcade",
 ].map(p => p.split(" "));
+
+const medium: string[][] = [
+  "The Quantum Hackers of Neo-Tokyo were infamous for their ability to manipulate quantum bits and break through the most secure encryption algorithms leaving a trail of digital chaos in their wake.",
+  "In the neon-lit underbelly of the city a group of rogue hackers known as the Cyber Phantoms orchestrated a massive data heist stealing sensitive information from the corporate giants and exposing their darkest secrets to the world.",
+  "The virtual reality landscape was dominated by a powerful AI known as The Architect who controlled every aspect of the digital realm and manipulated users like puppets in a grand cybernetic game.",
+  "As the sun set over the sprawling metropolis a lone hacker named ShadowByte sat in his dimly lit apartment surrounded by multiple monitors displaying lines of code as he prepared for his next big cyber attack against the corrupt government.",
+  "The underground hacker collective known as The Neon Syndicate operated in the shadows using their skills to disrupt the oppressive regime and fight for freedom in a world where information was power.",
+  "In the year 2077 the city was a sprawling cyberpunk dystopia where hackers were the new rebels and the digital frontier was a battleground for control over information and power.",
+  "The Quantum Encryption Protocol failed silently during the automated deployment sequence last Thursday",
+  "The AI-driven cyber attack exploited a zero-day vulnerability in the corporate firewall last night",
+  "Distributed Systems Architecture requires understanding consensus algorithms and partition tolerance strategies",
+  "The Dark Web Marketplace was taken down by law enforcement after a months-long investigation into illegal activities",
+  "The Neural Interface Device allows users to control their digital environment with their thoughts but raises ethical concerns about privacy and security",
+  "Biometric Authentication relies on fingerprint scanning retinal recognition and behavioral analysis patterns",
+  "The Cybernetic Augmentation Clinic offers cutting-edge enhancements but has a long waiting list due to high demand",
+  "Kubernetes Orchestration manages containerized workloads across multiple cloud infrastructure providers simultaneously",
+  "The Quantum Computer's qubits were entangled in a state of superposition allowing it to perform complex calculations at unprecedented speeds",
+  "The Recursive Algorithm traversed seventeen nested directories before encountering a circular dependency error",
+  "Polymorphic Inheritance enables objects to override inherited methods while maintaining their original interfaces",
+  "Cryptographic Hashing transforms arbitrary length inputs into fixed size outputs using deterministic functions",
+  "Asynchronous Middleware intercepted the incoming request and validated the Authorization Bearer token",
+  "The Neural Network Architecture consists of convolutional layers followed by pooling and dense connections",
+  "Infrastructure Monitoring dashboards aggregate telemetry from distributed microservices across production clusters",
+].map(p => p.split(" "));
+
+const hard: string[][] = [
+  "ERROR_0x7F: Segmentation fault (core dumped) — check /var/log/sysctl.d for details!",
+  "ssh root@192.168.1.42 -p 2222 && cat /etc/shadow | grep 'admin:$6$rounds=5000'",
+  "const API_KEY = process.env.NEXT_PUBLIC_KEY ?? 'sk-fallback_1234!@#$';",
+  "SELECT * FROM users WHERE email LIKE '%@corp.io' AND status != 'suspended' LIMIT 50;",
+  "git rebase -i HEAD~5 && git push --force-with-lease origin feature/auth-2FA",
+  "RegExp: /^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/",
+  "docker run -d --name=proxy -p 8080:80 -e NODE_ENV='production' nginx:alpine-3.18",
+  "The function returned {status: 418, message: \"I'm a teapot!\", timestamp: Date.now()};",
+  "curl -X POST https://api.example.com/v2/auth -H 'Content-Type: application/json' -d '{}'",
+  "if (user?.role === 'admin' && permissions.includes('WRITE')) { grant_access(); }",
+  "const response = await fetch('/api/data', { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } });",
+  "try { await someAsyncFunction(); } catch (error) { console.error('An error occurred:', error); }",
+  "npm install --save-dev eslint-config-airbnb-base eslint-plugin-import@^2.25.3",
+  "kubectl apply -f deployment.yaml --namespace=production --record",
+  "openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048",
+].map(p => p.split(" "));
+
+const paragraphs: Record<Difficulty, string[][]> = { easy, medium, hard };
 
 export default paragraphs;
