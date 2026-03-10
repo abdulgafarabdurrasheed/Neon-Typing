@@ -180,7 +180,7 @@ export function useGameEngine() {
     }, 1500);
   }, [stopTimers, endGame]);
 
-  const handleInput = useCallback((input: string) => {
+  const handleInput = useCallback((input: string, spacePressed = false) => {
     setState((prev) => {
       if (prev.status !== "playing") return prev;
 
@@ -220,7 +220,8 @@ export function useGameEngine() {
         onKeyErrorRef.current?.();
       }
 
-      if (newTypedChars === currentWord) {
+      const requireSpace = prev.difficulty !== "easy";
+      if (newTypedChars === currentWord && (!requireSpace || spacePressed)) {
         const nextIndex = prev.currentWordIndex + 1;
         const wordsCompleted = prev.wordsCompleted + 1;
         const newComboMeter = Math.min(100, comboMeter + COMBO_FILL_PER_WORD);

@@ -784,6 +784,7 @@ html, body {
   display: flex;
   gap: 1rem;
   justify-content: center;
+  margin-top: 10px;
 }
 .difficulty-btn {
   background: rgba(255, 255, 255, 0.05);

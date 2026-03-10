@@ -109,10 +109,10 @@ function App() {
       if (val.endsWith(" ")) {
         const trimmed = val.trimEnd();
         if (trimmed.length === 0) return
-        handleInput(trimmed);
+        handleInput(trimmed, true);
         return;
       }
-      handleInput(val);
+      handleInput(val, false);
     },
     [handleInput],
   );
@@ -188,7 +188,8 @@ function App() {
                 combo={state.maxCombo}
                 wordsCompleted={state.wordsCompleted}
                 elapsed={state.elapsed}
-                onRestart={() => startGame(state.difficulty)}
+                difficulty={state.difficulty}
+                onRestart={(d) => startGame(d)}
               />
             )}
           </AnimatePresence>

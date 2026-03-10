@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import type { Difficulty } from "../data/paragraphs";
 
 interface Props {
   wpm: number;
@@ -6,7 +7,8 @@ interface Props {
   combo: number;
   wordsCompleted: number;
   elapsed: number;
-  onRestart: () => void;
+  difficulty: Difficulty;
+  onRestart: (difficulty: Difficulty) => void;
 }
 
 function getPercentile(wpm: number): number {
@@ -39,6 +41,7 @@ export default function EndScreen({
   combo,
   wordsCompleted,
   elapsed,
+  difficulty,
   onRestart,
 }: Props) {
   const percentile = getPercentile(wpm);
@@ -116,9 +119,22 @@ export default function EndScreen({
             </div>
           </div>
 
-          <button className="restart-btn" onClick={onRestart}>
-            RESTART [ENTER]
-          </button>
+          <div className="end-actions">
+            <button className="restart-btn" onClick={() => onRestart(difficulty)}>
+              RESTART [ENTER]
+            </button>
+            <div className="difficulty-buttons">
+              {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
+                <button
+                  key={d}
+                  className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
+                  onClick={() => onRestart(d)}
+                >
+                  {d.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
       </motion.div>
