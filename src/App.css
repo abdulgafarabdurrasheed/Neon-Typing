@@ -825,3 +825,43 @@ html, body {
   font-size: 0.65rem;
   color: #888;
 }
+
+.app.theme-underwater {
+  --neon-green: #00e5ff;
+  --neon-pink: #0091ea;
+  --neon-cyan: #40c4ff;
+  --neon-yellow: #00e676;
+  --neon-purple: #6200ea;
+  --bg-primary: #001a33;
+  --bg-secondary: #002244;
+  --bg-card: #003355;
+  --text-dim: #4a7a9a;
+  --danger: #ff5252;
+}
+
+.app.theme-retro {
+  --neon-green: #00ff00;
+  --neon-pink: #ff0000;
+  --neon-cyan: #ffff00;
+  --neon-yellow: #ff8800;
+  --neon-purple: #ff00ff;
+  --bg-primary: #111111;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #222222;
+  --text-dim: #666666;
+  --danger: #ff0000;
+  --font-mono: "Press Start 2P", "Courier New", monospace;
+}
+
+.app.theme-fantasy {
+  --neon-green: #ffd700;
+  --neon-pink: #ff4500;
+  --neon-cyan: #9370db;
+  --neon-yellow: #ffa500;
+  --neon-purple: #8b008b;
+  --bg-primary: #0d0d1a;
+  --bg-secondary: #1a1a2e;
+  --bg-card: #2a1a3e;
+  --text-dim: #6a5a7a;
+  --danger: #dc143c;
+}

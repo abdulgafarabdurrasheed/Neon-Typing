@@ -12,7 +12,7 @@ import BackgroundFX from "./components/BackgroundFX";
 import ParticleEmitter from "./components/ParticleCanvas";
 import { useSoundEffects } from "./hooks/useSoundEffects";
 import confetti from "canvas-confetti";
-import type { Difficulty } from "./data/paragraphs"
+import type { Difficulty, Theme } from "./data/paragraphs"
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -43,7 +43,7 @@ function App() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (state.status === "gameover" && e.key === "Enter") startGame(state.difficulty);
+      if (state.status === "gameover" && e.key === "Enter") startGame(state.difficulty, state.theme);
       if (state.status === "playing") inputRef.current?.focus();
     };
     window.addEventListener("keydown", handler);
@@ -117,15 +117,15 @@ function App() {
     [handleInput],
   );
 
-  const handleDismissIntro = useCallback((difficulty: Difficulty) => {
+  const handleDismissIntro = useCallback((difficulty: Difficulty, theme: Theme) => {
     setShowIntro(false);
-    startGame(difficulty);
+    startGame(difficulty, theme);
     setTimeout(() => inputRef.current?.focus(), 100);
   }, [startGame]);
 
   return (
     <div
-      className={`app ${shake ? "shake" : ""} ${state.isSuperSaiyan ? "super-saiyan-mode" : ""}`}
+      className={`app theme-${state.theme} ${shake ? "shake" : ""} ${state.isSuperSaiyan ? "super-saiyan-mode" : ""}`}
       onClick={() => inputRef.current?.focus()}
     >
       <AnimatePresence>
