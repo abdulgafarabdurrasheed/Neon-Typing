@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import paragraphs, { type Difficulty } from "../data/paragraphs";
+import paragraphs, { type Difficulty, type Theme } from "../data/paragraphs";
 
 export interface GameState {
   status: "idle" | "playing" | "gameover";

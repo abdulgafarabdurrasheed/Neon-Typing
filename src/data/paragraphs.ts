@@ -138,7 +138,47 @@ const cyberpunk = {
   ].map(p => p.split(" "))
 }
 
-const 
+const underwater = {
+  easy: [
+    "underwater"
+  ].map(p => p.split(" ")),
+
+  medium: [
+    "Underwater"
+  ].map(p => p.split(" ")),
+
+  hard: [
+    "Un!Der(wat)'er'."
+  ].map(p => p.split(" ")),
+};
+
+const retro = {
+  easy: [
+    "retro"
+  ].map(p => p.split(" ")),
+
+  medium: [
+    "Retro"
+  ].map(p => p.split(" ")),
+
+  hard: [
+    "ReT1!r'o(.)'"
+  ].map(p => p.split(" ")),
+}
+
+const fantasy = {
+  easy: [
+    "fantasy"
+  ].map(p => p.split(" ")),
+
+  medium: [
+    "Fantasy"
+  ].map(p => p.split(" ")),
+
+  hard: [
+    "Fan4(ta-)--sy!!"
+  ].map(p => p.split(" ")),
+}
 
 const paragraphs: Record<Theme, Record<Difficulty, string[][]>> = { cyberpunk, underwater, retro, fantasy };
 
