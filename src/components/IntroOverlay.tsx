@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import type { Difficulty } from "../data/paragraphs"
+import type { Difficulty, Theme } from "../data/paragraphs"
+import { THEMES } from "../data/paragraphs"; 
 
 interface Props {
-  onDismiss: (difficulty: Difficulty) => void;
+  onDismiss: (difficulty: Difficulty, theme: Theme) => void;
 }
 
 const steps = [
@@ -33,6 +34,7 @@ export default function IntroOverlay({ onDismiss }: Props) {
   const [step, setStep] = useState(0);
   const [show, setShow] = useState(true);
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [theme, setTheme] = useState<Theme>("cyberpunk");
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -41,7 +43,7 @@ export default function IntroOverlay({ onDismiss }: Props) {
         if (step < steps.length - 1) setStep((s) => s + 1);
         else {
           setShow(false);
-          setTimeout(() => onDismiss(difficulty), 500);
+          setTimeout(() => onDismiss(difficulty, theme), 500);
         }
       }
     };
@@ -88,25 +90,42 @@ export default function IntroOverlay({ onDismiss }: Props) {
             </AnimatePresence>
 
             {step === steps.length - 1 && (
-              <div className="difficulty-selector">
-                <p className="difficulty-label">SELECT DIFFICULTY</p>
-                <div className="difficulty-buttons">
-                  {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
-                    <button
-                      key={d}
-                      className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
-                      onClick={() => setDifficulty(d)}
-                    >
-                      <span className="diff-name">{d.toUpperCase()}</span>
-                      <span className="diff-desc">
-                        {d === "easy" && "Lowercase only"}
-                        {d === "medium" && "Mixed case, longer words"}
-                        {d === "hard" && "Special characters & symbols"}
-                      </span>
-                    </button>
-                  ))}
+              <>
+                <div className="theme-selector">
+                  <p className="difficulty-label">SELECT THEME</p>
+                  <div className="theme-buttons">
+                    {THEMES.map((t) => (
+                      <button
+                        key={t.id}
+                        className={`theme-btm theme-${t.id} ${theme === t.id ? "selected" : ""}`}
+                        onClick={() => setTheme(t.id)}
+                      >
+                        <span className="theme-name">{t.name}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+
+                <div className="difficulty-selector">
+                  <p className="difficulty-label">SELECT DIFFICULTY</p>
+                  <div className="difficulty-buttons">
+                    {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
+                      <button
+                        key={d}
+                        className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
+                        onClick={() => setDifficulty(d)}
+                      >
+                        <span className="diff-name">{d.toUpperCase()}</span>
+                        <span className="diff-desc">
+                          {d === "easy" && "Lowercase only"}
+                          {d === "medium" && "Mixed case, longer words"}
+                          {d === "hard" && "Special characters & symbols"}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
 
             <div className="intro-dots">

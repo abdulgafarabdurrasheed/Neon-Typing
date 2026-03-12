@@ -22,6 +22,7 @@ export interface GameState {
   level: number;
   fallingSpeed: number;
   difficulty: Difficulty;
+  theme: Theme;
 }
 
 const INITIAL_HEALTH = 100;
@@ -36,7 +37,7 @@ const DIFFICULTY_CONFIG = {
 };
 
 function pickParagraph(difficulty: Difficulty): string[] {
-  const pool = paragraphs[difficulty];
+  const pool = paragraphs[theme][difficulty];
   return [...pool[Math.floor(Math.random() * pool.length)]];
 }
 
@@ -44,6 +45,7 @@ export function useGameEngine() {
   const [state, setState] = useState<GameState>({
     status: "idle",
     difficulty: "easy",
+    theme: "cyberpunk",
     words: [],
     currentWordIndex: 0,
     typedChars: "",
@@ -119,14 +121,15 @@ export function useGameEngine() {
     onGameOverRef.current?.();
   }, [stopTimers]);
 
-  const startGame = useCallback((difficulty: Difficulty = "easy") => {
+  const startGame = useCallback((difficulty: Difficulty = "easy", theme: Theme = 'cyberpunk') => {
     stopTimers();
-    const words = pickParagraph(difficulty);
+    const words = pickParagraph(difficulty, theme);
     const now = Date.now();
 
     setState({
       status: "playing",
       difficulty,
+      theme,
       words,
       currentWordIndex: 0,
       typedChars: "",
@@ -245,7 +248,7 @@ export function useGameEngine() {
         let words = prev.words;
         let currentWordIndex = nextIndex;
         if (nextIndex >= prev.words.length) {
-          words = pickParagraph(prev.difficulty);
+          words = pickParagraph(prev.difficulty, prev.theme);
           currentWordIndex = 0;
         }
         return {
