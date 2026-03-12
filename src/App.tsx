@@ -132,7 +132,7 @@ function App() {
         {showIntro && (
           <IntroOverlay
             onDismiss={handleDismissIntro}
-            initialStep={state.status === "gameover" ? 3 : 0}
+            initialStep={state.status === "gameover" ? 4 : 0}
           />
         )}
       </AnimatePresence>

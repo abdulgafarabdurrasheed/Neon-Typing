@@ -8,7 +8,7 @@ interface Props {
   initialStep?: number;
 }
 
-const steps = [
+const tutorialSteps = [
   {
     icon: "⌨️",
     title: "TYPE TO SURVIVE",
@@ -31,6 +31,10 @@ const steps = [
   },
 ];
 
+const TOTAL_STEPS = tutorialSteps.length + 2; // +1 for theme, +1 for difficulty
+const THEME_STEP = tutorialSteps.length;      // index 4
+const DIFFICULTY_STEP = tutorialSteps.length + 1; // index 5
+
 export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
   const [step, setStep] = useState(initialStep);
   const [show, setShow] = useState(true);
@@ -41,7 +45,7 @@ export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        if (step < steps.length - 1) setStep((s) => s + 1);
+        if (step < TOTAL_STEPS - 1) setStep((s) => s + 1);
         else {
           setShow(false);
           setTimeout(() => onDismiss(difficulty, theme), 500);
@@ -84,53 +88,62 @@ export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
                 exit={{ x: -100, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
               >
-                <span className="intro-step-icon">{steps[step].icon}</span>
-                <h2 className="intro-step-title">{steps[step].title}</h2>
-                <p className="intro-step-desc">{steps[step].desc}</p>
+                {step < tutorialSteps.length && (
+                  <>
+                    <span className="intro-step-icon">{tutorialSteps[step].icon}</span>
+                    <h2 className="intro-step-title">{tutorialSteps[step].title}</h2>
+                    <p className="intro-step-desc">{tutorialSteps[step].desc}</p>
+                  </>
+                )}
+
+                {step === THEME_STEP && (
+                  <>
+                    <span className="intro-step-icon">🎨</span>
+                    <h2 className="intro-step-title">CHOOSE YOUR WORLD</h2>
+                    <p className="intro-step-desc">Pick a theme to change the vibe.</p>
+                    <div className="theme-buttons">
+                      {THEMES.map((t) => (
+                        <button
+                          key={t.id}
+                          className={`theme-btn theme-${t.id} ${theme === t.id ? "selected" : ""}`}
+                          onClick={() => setTheme(t.id)}
+                        >
+                          <span className="theme-emoji">{t.emoji}</span>
+                          <span className="theme-name">{t.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {step === DIFFICULTY_STEP && (
+                  <>
+                    <span className="intro-step-icon">🎯</span>
+                    <h2 className="intro-step-title">SELECT DIFFICULTY</h2>
+                    <p className="intro-step-desc">How hard do you want it?</p>
+                    <div className="difficulty-buttons">
+                      {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
+                        <button
+                          key={d}
+                          className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
+                          onClick={() => setDifficulty(d)}
+                        >
+                          <span className="diff-name">{d.toUpperCase()}</span>
+                          <span className="diff-desc">
+                            {d === "easy" && "Lowercase only"}
+                            {d === "medium" && "Mixed case, longer words"}
+                            {d === "hard" && "Special characters & symbols"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </motion.div>
             </AnimatePresence>
 
-            {step === steps.length - 1 && (
-              <>
-                <div className="theme-selector">
-                  <p className="difficulty-label">SELECT THEME</p>
-                  <div className="theme-buttons">
-                    {THEMES.map((t) => (
-                      <button
-                        key={t.id}
-                        className={`theme-btn theme-${t.id} ${theme === t.id ? "selected" : ""}`}
-                        onClick={() => setTheme(t.id)}
-                      >
-                        <span className="theme-name">{t.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="difficulty-selector">
-                  <p className="difficulty-label">SELECT DIFFICULTY</p>
-                  <div className="difficulty-buttons">
-                    {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
-                      <button
-                        key={d}
-                        className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
-                        onClick={() => setDifficulty(d)}
-                      >
-                        <span className="diff-name">{d.toUpperCase()}</span>
-                        <span className="diff-desc">
-                          {d === "easy" && "Lowercase only"}
-                          {d === "medium" && "Mixed case, longer words"}
-                          {d === "hard" && "Special characters & symbols"}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            )}
-
             <div className="intro-dots">
-              {steps.map((_, i) => (
+              {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
                   key={i}
                   className={`intro-dot ${i === step ? "active" : ""} ${i < step ? "done" : ""}`}
@@ -142,7 +155,7 @@ export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
               animate={{ opacity: [0.3, 1, 0.3] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              {step < steps.length - 1
+              {step < TOTAL_STEPS - 1
                 ? "Press SPACE to continue"
                 : "Press SPACE to begin"}
             </motion.p>
