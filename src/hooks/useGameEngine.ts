@@ -36,7 +36,7 @@ const DIFFICULTY_CONFIG = {
   hard: { healthDrain: 4, healthRestore: 2, comboDrain: 35, errorPenalty: 1 },
 };
 
-function pickParagraph(difficulty: Difficulty): string[] {
+function pickParagraph(difficulty: Difficulty, theme: Theme): string[] {
   const pool = paragraphs[theme][difficulty];
   return [...pool[Math.floor(Math.random() * pool.length)]];
 }

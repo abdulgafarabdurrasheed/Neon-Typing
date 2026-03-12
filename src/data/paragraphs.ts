@@ -1,4 +1,3 @@
-// 50 cyberpunk / hacker-themed paragraphs broken into word arrays
 export type Difficulty = "easy" | "medium" | "hard";
 export type Theme = "cyberpunk" | "underwater" | "retro" | "fantasy";
 

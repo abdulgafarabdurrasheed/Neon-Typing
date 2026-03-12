@@ -1,12 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import type { GameState } from "../hooks/useGameEngine";
+import { THEMES } from '../data/paragraphs'
 
 interface Props {
   state: GameState;
 }
 
 export default function ComboMeter({ state }: Props) {
-  const { combo, comboMeter, isSuperSaiyan, level } = state;
+  const { combo, comboMeter, isSuperSaiyan, level, theme } = state;
+  const themeConfig = THEMES.find(t => t.id === theme)
 
   return (
     <div className="combo-meter-container">
@@ -65,7 +67,7 @@ export default function ComboMeter({ state }: Props) {
               scale: { repeat: Infinity, duration: 0.6 },
             }}
           >
-            ⚡ MAXIMUM OVERDRIVE ⚡
+            {themeConfig.overdriveLabel}
           </motion.div>
         )}
       </div>

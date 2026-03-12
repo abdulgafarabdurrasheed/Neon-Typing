@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import type { Difficulty } from "../data/paragraphs";
+import type { Difficulty, Theme } from "../data/paragraphs";
+import { THEMES } from "../data/paragraphs";
 
 interface Props {
   wpm: number;
@@ -8,7 +9,9 @@ interface Props {
   wordsCompleted: number;
   elapsed: number;
   difficulty: Difficulty;
-  onRestart: (difficulty: Difficulty) => void;
+  onRestart: (difficulty: Difficulty, theme: Theme) => void;
+  onChangeTheme: () => void;
+  theme: Theme;
 }
 
 function getPercentile(wpm: number): number {
@@ -43,6 +46,8 @@ export default function EndScreen({
   elapsed,
   difficulty,
   onRestart,
+  onChangeTheme,
+  theme,
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
@@ -54,6 +59,7 @@ export default function EndScreen({
     const secs = Math.floor(s % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+  const themeConfig = THEMES.find(t => t.id === theme)!;
 
   return (
     <motion.div
@@ -74,7 +80,7 @@ export default function EndScreen({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <h1 className="end-title">SYSTEM OFFLINE</h1>
+          <h1 className="end-title">{themeConfig.gameOverTitle}</h1>
           {isNewBest && (
             <motion.div
               className="new-best-badge"
@@ -120,7 +126,7 @@ export default function EndScreen({
           </div>
 
           <div className="end-actions">
-            <button className="restart-btn" onClick={() => onRestart(difficulty)}>
+            <button className="restart-btn" onClick={() => onRestart(difficulty, theme)}>
               RESTART [ENTER]
             </button>
             <div className="difficulty-buttons">
@@ -128,12 +134,15 @@ export default function EndScreen({
                 <button
                   key={d}
                   className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
-                  onClick={() => onRestart(d)}
+                  onClick={() => onRestart(d, theme)}
                 >
                   {d.toUpperCase()}
                 </button>
               ))}
             </div>
+            <button className="change-theme-btn" onClick={onChangeTheme}>
+              CHANGE THEME
+            </button>
           </div>
         </motion.div>
 

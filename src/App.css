@@ -550,6 +550,26 @@ html, body {
   box-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
 }
 
+.change-theme-btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--text-medium);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+}
+
+.change-theme-btn:hover {
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
 .intro-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -940,4 +960,44 @@ html, body {
 }
 .app.theme-fantasy .vignette {
   background: radial-gradient(ellipse at center, transparent 40%, rgba(13, 13, 26, 0.6) 100%);
+}
+
+.theme-selector {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.theme-buttons {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.theme-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 90px;
+}
+.theme-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+.theme-btn.selected {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+}
+.theme-emoji { font-size: 1.5rem; }
+.theme-name {
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #ccc;
+  letter-spacing: 1px;
 }

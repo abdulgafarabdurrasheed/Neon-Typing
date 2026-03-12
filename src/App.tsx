@@ -129,7 +129,12 @@ function App() {
       onClick={() => inputRef.current?.focus()}
     >
       <AnimatePresence>
-        {showIntro && <IntroOverlay onDismiss={handleDismissIntro} />}
+        {showIntro && (
+          <IntroOverlay
+            onDismiss={handleDismissIntro}
+            initialStep={state.status === "gameover" ? 3 : 0}
+          />
+        )}
       </AnimatePresence>
 
       {!showIntro && (
@@ -189,7 +194,9 @@ function App() {
                 wordsCompleted={state.wordsCompleted}
                 elapsed={state.elapsed}
                 difficulty={state.difficulty}
-                onRestart={(d) => startGame(d)}
+                theme={state.theme}
+                onRestart={(d, t) => startGame(d, t)}
+                onChangeTheme={() => setShowIntro(true)}
               />
             )}
           </AnimatePresence>
@@ -199,7 +206,7 @@ function App() {
       <div className="vignette" />
       <div className="scanlines" />
 
-      {!showIntro && <BackgroundFX />}
+      {!showIntro && <BackgroundFX theme={state.theme} />}
     </div>
   );
 }

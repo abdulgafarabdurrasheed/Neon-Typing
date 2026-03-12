@@ -1,4 +1,9 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react";
+import type { Theme } from "../data/paragraphs";
+
+interface Props {
+    theme: Theme
+}
 
 interface Particle {
     x: number; y: number;
@@ -8,7 +13,14 @@ interface Particle {
     color: string;
 }
 
-export default function BackgroundFX() {
+const THEME_PARTICLES: Record<Theme, { colors: string[]; scanColor: string }> = {
+  cyberpunk: { colors: ["#39ff14", "#00f0ff", "#ff006e", "#bf00ff", "#f5f520"], scanColor: "#39ff14" },
+  underwater: { colors: ["#00e5ff", "#0091ea", "#40c4ff", "#00e676", "#80deea"], scanColor: "#00e5ff" },
+  retro:     { colors: ["#00ff00", "#ff0000", "#ffff00", "#ff00ff", "#ffffff"], scanColor: "#00ff00" },
+  fantasy:   { colors: ["#ffd700", "#ff4500", "#9370db", "#ffa500", "#ff69b4"], scanColor: "#ffd700" },
+};
+
+export default function BackgroundFX({ theme }: Props) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -23,7 +35,7 @@ export default function BackgroundFX() {
         resize();
         window.addEventListener("resize", resize);
 
-        const colors = ["#39ff14", "#00f0ff", "#ff006e", "#bf00ff", "#f5f520"];
+        const { colors, scanColor } = THEME_PARTICLES[theme];
         const particles: Particle[] = Array.from({ length: 60 }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
@@ -56,7 +68,7 @@ export default function BackgroundFX() {
             }
 
             ctx.globalAlpha = 0.03;
-            ctx.fillStyle = "#39ff14";
+            ctx.fillStyle = scanColor;
             ctx.fillRect(0, scanY, canvas.width, 2);
             scanY = (scanY + 0.5) % canvas.height;
 

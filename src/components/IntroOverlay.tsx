@@ -5,6 +5,7 @@ import { THEMES } from "../data/paragraphs";
 
 interface Props {
   onDismiss: (difficulty: Difficulty, theme: Theme) => void;
+  initialStep?: number;
 }
 
 const steps = [
@@ -30,8 +31,8 @@ const steps = [
   },
 ];
 
-export default function IntroOverlay({ onDismiss }: Props) {
-  const [step, setStep] = useState(0);
+export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
+  const [step, setStep] = useState(initialStep);
   const [show, setShow] = useState(true);
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [theme, setTheme] = useState<Theme>("cyberpunk");
@@ -49,7 +50,7 @@ export default function IntroOverlay({ onDismiss }: Props) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [step, onDismiss, difficulty]);
+  }, [step, onDismiss, difficulty, theme]);
 
   return (
     <AnimatePresence>
@@ -97,7 +98,7 @@ export default function IntroOverlay({ onDismiss }: Props) {
                     {THEMES.map((t) => (
                       <button
                         key={t.id}
-                        className={`theme-btm theme-${t.id} ${theme === t.id ? "selected" : ""}`}
+                        className={`theme-btn theme-${t.id} ${theme === t.id ? "selected" : ""}`}
                         onClick={() => setTheme(t.id)}
                       >
                         <span className="theme-name">{t.name}</span>
