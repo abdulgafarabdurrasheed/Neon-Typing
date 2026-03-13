@@ -19,6 +19,7 @@ interface Props {
   leaderboardEntries: LeaderboardEntry[];
   leaderboardLoading: boolean;
   currentUuid: string;
+  onNicknameUpdate?: () => void;
 }
 
 function getPercentile(wpm: number): number {
@@ -58,6 +59,7 @@ export default function EndScreen({
   leaderboardEntries,
   leaderboardLoading,
   currentUuid,
+  onNicknameUpdate,
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
@@ -66,9 +68,10 @@ export default function EndScreen({
   const [nickname, setLocalNickname] = useState(getNickname());
   const [editingName, setEditingName] = useState(false);
 
-  const handleNicknameSubmit = () => {
-    setNickname(nickname)
-    setEditingName(false)
+  const handleNicknameSubmit = async () => {
+    await setNickname(nickname, currentUuid);
+    setEditingName(false);
+    if (onNicknameUpdate) onNicknameUpdate();
   };
 
   const formatTime = (s: number) => {

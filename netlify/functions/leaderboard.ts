@@ -31,16 +31,19 @@ export default async (request: Request, _context: Context) => {
 
   const leaderboard = results
     .filter(Boolean)
-    .map((entry: any, index: number) => ({
-      rank: index + 1,
-      nickname: entry.nickname || `ANON${uuid}`,
-      wpm: Number(entry.wpm) || 0,
-      accuracy: Number(entry.accuracy) || 0,
-      maxCombo: Number(entry.maxCombo) || 0,
-      difficulty: entry.difficulty || "easy",
-      theme: entry.theme || "cyberpunk",
-      uuid: entry.uuid,
-    }));
+    .map((entry: any, index: number) => {
+      const anonId = (entry.uuid || "0000000000").replace(/-/g, "").substring(0, 10).toUpperCase();
+      return {
+        rank: index + 1,
+        nickname: entry.nickname || `ANON${anonId}`,
+        wpm: Number(entry.wpm) || 0,
+        accuracy: Number(entry.accuracy) || 0,
+        maxCombo: Number(entry.maxCombo) || 0,
+        difficulty: entry.difficulty || "easy",
+        theme: entry.theme || "cyberpunk",
+        uuid: entry.uuid,
+      };
+    });
 
   return new Response(JSON.stringify({ leaderboard }), {
     status: 200,

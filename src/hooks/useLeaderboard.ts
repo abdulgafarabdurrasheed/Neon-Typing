@@ -21,11 +21,22 @@ function getOrCreateUUID(): string {
 }
 
 export function getNickname(): string {
+  const uuid = getOrCreateUUID().replace(/-/g, "").substring(0, 10).toUpperCase();
   return localStorage.getItem("neontype-nickname") || `ANON${uuid}`;
 }
 
-export function setNickname(name: string) {
-  localStorage.setItem("neontype-nickname", name.slice(0, 16));
+export async function setNickname(name: string, uuid: string) {
+  const safeName = name.slice(0, 16);
+  localStorage.setItem("neontype-nickname", safeName);
+  try {
+    await fetch("/.netlify/functions/update-name", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ uuid, nickname: safeName }),
+    });
+  } catch (error) {
+    console.error("Failed to update nickname in DB", error);
+  }
 }
 
 export function useLeaderboard() {

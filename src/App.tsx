@@ -27,6 +27,7 @@ function App() {
     loading: leaderboardLoading,
     uuid: currentUuid,
     submitScore,
+    fetchLeaderboard,
   } = useLeaderboard();
 
   const {
@@ -223,6 +224,7 @@ function App() {
                 leaderboardEntries={leaderboardEntries}
                 leaderboardLoading={leaderboardLoading}
                 currentUuid={currentUuid}
+                onNicknameUpdate={fetchLeaderboard}
               />
             )}
           </AnimatePresence>
