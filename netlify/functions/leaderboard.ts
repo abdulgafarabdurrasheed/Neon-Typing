@@ -33,7 +33,7 @@ export default async (request: Request, _context: Context) => {
     .filter(Boolean)
     .map((entry: any, index: number) => ({
       rank: index + 1,
-      nickname: entry.nickname || "ANON",
+      nickname: entry.nickname || `ANON${uuid}`,
       wpm: Number(entry.wpm) || 0,
       accuracy: Number(entry.accuracy) || 0,
       maxCombo: Number(entry.maxCombo) || 0,

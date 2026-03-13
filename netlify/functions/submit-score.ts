@@ -56,10 +56,10 @@ export default async (request: Request, _context: Context) => {
         });
     }
 
-    const safeName = (nickname || "ANON")
+    const safeName = (nickname || `ANON${uuid}`)
         .replace(/[^a-zA-Z0-9 _-]/g, "")
         .slice(0, 16)
-        .trim() || "ANON";
+        .trim() || `ANON${uuid}`;
 
     const rateLimitKey = `ratelimit:${uuid}`;
     const lastSubmit = await redis.get<number>(rateLimitKey);

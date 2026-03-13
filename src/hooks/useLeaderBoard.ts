@@ -21,7 +21,7 @@ function getOrCreateUUID(): string {
 }
 
 export function getNickname(): string {
-  return localStorage.getItem("neontype-nickname") || "ANON";
+  return localStorage.getItem("neontype-nickname") || `ANON${uuid}`;
 }
 
 export function setNickname(name: string) {
