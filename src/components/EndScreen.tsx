@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import type { Difficulty, Theme } from "../data/paragraphs";
 import { THEMES } from "../data/paragraphs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { toBlob } from "html-to-image";
 import Leaderboard from "./Leaderboard";
 import { getNickname, setNickname } from "../hooks/useLeaderboard";
 import type { LeaderboardEntry } from "../hooks/useLeaderboard";
@@ -69,6 +70,33 @@ export default function EndScreen({
   const isNewBest = wpm >= (best.wpm || 0);
   const [nickname, setLocalNickname] = useState(getNickname());
   const [editingName, setEditingName] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isCopying, setIsCopying] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleCopyImage = async () => {
+    if (!cardRef.current) return;
+    setIsCopying(true);
+    try {
+      const blob = await toBlob(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+      });
+      if (blob) {
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob }),
+        ]);
+
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2500);
+      }
+    } catch (err) {
+      console.error("Failed to copy image:", err);
+      alert("Sorry, copying the image failed. Please try again.");
+    } finally {
+      setIsCopying(false);
+    }
+  };
 
   useEffect(() => {
     if (!onPollLeaderboard) return;
@@ -89,7 +117,7 @@ export default function EndScreen({
     const secs = Math.floor(s % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
-  const themeConfig = THEMES.find(t => t.id === theme)!;
+  const themeConfig = THEMES.find((t) => t.id === theme)!;
 
   return (
     <motion.div
@@ -104,7 +132,6 @@ export default function EndScreen({
         animate={{ scale: 1, y: 0, rotateX: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
       >
-
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -163,19 +190,27 @@ export default function EndScreen({
                   className="nickname-input"
                   type="text"
                   value={nickname}
-                  onChange={(e) => setLocalNickname(e.target.value.slice(0, 16))}
+                  onChange={(e) =>
+                    setLocalNickname(e.target.value.slice(0, 16))
+                  }
                   onKeyDown={(e) => e.key === "Enter" && handleNicknameSubmit()}
                   maxLength={16}
                   autoFocus
                 />
-                <button className="nickname-save-btn" onClick={handleNicknameSubmit}>
+                <button
+                  className="nickname-save-btn"
+                  onClick={handleNicknameSubmit}
+                >
                   SAVE
                 </button>
               </div>
             ) : (
               <div className="nickname-display">
                 <span className="nickname-value">{nickname}</span>
-                <button className="nickname-edit-btn" onClick={() => setEditingName(true)}>
+                <button
+                  className="nickname-edit-btn"
+                  onClick={() => setEditingName(true)}
+                >
                   ✏️
                 </button>
               </div>
@@ -183,9 +218,25 @@ export default function EndScreen({
           </div>
 
           <div className="end-actions">
-            <button className="restart-btn" onClick={() => onRestart(difficulty, theme)}>
+            <button
+              className="restart-btn"
+              onClick={() => onRestart(difficulty, theme)}
+            >
               RESTART [ENTER]
             </button>
+
+            <button
+              className={`share-btn ${copySuccess ? "success" : ""}`}
+              onClick={handleCopyImage}
+              disabled={isCopying}
+            >
+              {isCopying
+                ? "COPYING..."
+                : copySuccess
+                  ? "COPIED TO CLIPBOARD"
+                  : "COPY STAT CARD"}
+            </button>
+
             <div className="difficulty-buttons">
               {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
                 <button
@@ -207,8 +258,47 @@ export default function EndScreen({
             currentUuid={currentUuid}
           />
         </motion.div>
-
       </motion.div>
+
+      <div className="share-card-wrapper">
+        <div ref={cardRef} className={`share-card theme-${theme}`}>
+          <div className="share-card-inner">
+            <div className="card-header">
+              <h2>
+                <span className="neon-green">NEON</span>
+                <span className="neon-pink">TYPE</span>
+              </h2>
+              <span className="card-theme-badge">{themeConfig.name}</span>
+            </div>
+
+            <div className="card-rank">
+              <span className="card-rank-emoji">{rank.emoji}</span>
+              <span className="card-rank-name" style={{ color: rank.color }}>
+                {rank.name}
+              </span>
+            </div>
+
+            <div className="card-stats">
+              <div className="card-stat">
+                <span className="card-label">WPM</span>
+                <span className="card-value neon-cyan">{wpm}</span>
+              </div>
+              <div className="card-stat">
+                <span className="card-label">ACCURACY</span>
+                <span className="card-value">{accuracy}%</span>
+              </div>
+              <div className="card-stat">
+                <span className="card-label">COMBO</span>
+                <span className="card-value">{combo}</span>
+              </div>
+            </div>
+
+            <div className="card-footer">
+              play now at neon-type.netlify.com{" "}
+            </div>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 }

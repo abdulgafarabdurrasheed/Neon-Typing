@@ -1165,3 +1165,144 @@ html, body {
   cursor: pointer;
   letter-spacing: 1px;
 }
+
+.share-btn {
+  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.share-btn:hover:not(:disabled) {
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+}
+
+.share-btn.success {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  background: rgba(57, 255, 20, 0.4);
+}
+
+.share-btn.error {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(255, 0, 64, 0.4);
+  box-shadow: 0 0 15px rgba(255, 0, 64, 0.3);
+}
+
+.share-card-wrapper {
+  position: absolute;
+  top: -10000000000000px;
+  left: -1000000000000px;
+  z-index: -100;
+}
+
+.share-card {
+  width: 500px;
+  background: var(--bg-primary);
+  padding: 10px;
+  border-radius: 16px;
+}
+
+.share-card-inner {
+  background: linear-gradient(135deg, var(--bg-card) 0%, #0f0f1f 100%);
+  border: 2px solid var(--neon-pink);
+  border-radius: 12px;
+  border-image: linear-gradient(135deg, var(--neon-green), var(--neon-pink)) 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.card-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 3px;
+}
+
+.card-theme-badge {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: black;
+  letter-spacing: 2px;
+  border: 1px solid var(--text-dim);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.card-rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.card-rank-emoji {
+  font-size: 4rem;
+}
+
+.card-rank-name {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-shadow: 0 0 10px currentColor;
+}
+
+.card-stats {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.card-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.card-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.card-value {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--neon-green);
+}
+
+.card-value.neon-cyan {
+  color: var(--neon-cyan);
+}
+
+.card-footer {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  margin-top: 0.5rem;
+}
