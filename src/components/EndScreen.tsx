@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import type { Difficulty, Theme } from "../data/paragraphs";
 import { THEMES } from "../data/paragraphs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Leaderboard from "./Leaderboard";
 import { getNickname, setNickname } from "../hooks/useLeaderboard";
 import type { LeaderboardEntry } from "../hooks/useLeaderboard";
@@ -20,6 +20,7 @@ interface Props {
   leaderboardLoading: boolean;
   currentUuid: string;
   onNicknameUpdate?: () => void;
+  onPollLeaderboard?: () => void;
 }
 
 function getPercentile(wpm: number): number {
@@ -60,6 +61,7 @@ export default function EndScreen({
   leaderboardLoading,
   currentUuid,
   onNicknameUpdate,
+  onPollLeaderboard,
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
@@ -67,6 +69,14 @@ export default function EndScreen({
   const isNewBest = wpm >= (best.wpm || 0);
   const [nickname, setLocalNickname] = useState(getNickname());
   const [editingName, setEditingName] = useState(false);
+
+  useEffect(() => {
+    if (!onPollLeaderboard) return;
+    const interval = setInterval(() => {
+      onPollLeaderboard();
+    }, 15000); // Faux-live poll every 15 seconds
+    return () => clearInterval(interval);
+  }, [onPollLeaderboard]);
 
   const handleNicknameSubmit = async () => {
     await setNickname(nickname, currentUuid);
