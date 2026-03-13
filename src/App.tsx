@@ -225,7 +225,7 @@ function App() {
                 leaderboardLoading={leaderboardLoading}
                 currentUuid={currentUuid}
                 onNicknameUpdate={fetchLeaderboard}
-                onPollLeaderboard={() => fetchLeaderboard(true)}
+                onPollLeaderboard={() => fetchLeaderboard()}
               />
             )}
           </AnimatePresence>

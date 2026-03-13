@@ -74,7 +74,7 @@ export default function EndScreen({
     if (!onPollLeaderboard) return;
     const interval = setInterval(() => {
       onPollLeaderboard();
-    }, 15000); // Faux-live poll every 15 seconds
+    }, 15000);
     return () => clearInterval(interval);
   }, [onPollLeaderboard]);
 
