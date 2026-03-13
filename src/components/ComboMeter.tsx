@@ -67,7 +67,7 @@ export default function ComboMeter({ state }: Props) {
               scale: { repeat: Infinity, duration: 0.6 },
             }}
           >
-            {themeConfig.overdriveLabel}
+            {themeConfig?.overdriveLabel || " MAXIMUM OVERDRIVE"}
           </motion.div>
         )}
       </div>

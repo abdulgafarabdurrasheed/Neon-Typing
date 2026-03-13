@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
 import type { Difficulty, Theme } from "../data/paragraphs";
 import { THEMES } from "../data/paragraphs";
+import { useState } from "react";
+import Leaderboard from "./Leaderboard";
+import { getNickname, setNickname } from "../hooks/useLeaderboard";
+import type { LeaderboardEntry } from "../hooks/useLeaderboard";
 
 interface Props {
   wpm: number;
@@ -12,6 +16,9 @@ interface Props {
   onRestart: (difficulty: Difficulty, theme: Theme) => void;
   onChangeTheme: () => void;
   theme: Theme;
+  leaderboardEntries: LeaderboardEntry[];
+  leaderboardLoading: boolean;
+  currentUuid: string;
 }
 
 function getPercentile(wpm: number): number {
@@ -48,11 +55,21 @@ export default function EndScreen({
   onRestart,
   onChangeTheme,
   theme,
+  leaderboardEntries,
+  leaderboardLoading,
+  currentUuid,
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
   const best = JSON.parse(localStorage.getItem("neontype-best") || "{}");
   const isNewBest = wpm >= (best.wpm || 0);
+  const [nickname, setLocalNickname] = useState(getNickname());
+  const [editingName, setEditingName] = useState(false);
+
+  const handleNicknameSubmit = () => {
+    setNickname(nickname)
+    setEditingName(false)
+  };
 
   const formatTime = (s: number) => {
     const mins = Math.floor(s / 60);
@@ -125,6 +142,33 @@ export default function EndScreen({
             </div>
           </div>
 
+          <div className="nickname-section">
+            <span className="nickname-label">YOUR NAME:</span>
+            {editingName ? (
+              <div className="nickname-edit">
+                <input
+                  className="nickname-input"
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setLocalNickname(e.target.value.slice(0, 16))}
+                  onKeyDown={(e) => e.key === "Enter" && handleNicknameSubmit()}
+                  maxLength={16}
+                  autoFocus
+                />
+                <button className="nickname-save-btn" onClick={handleNicknameSubmit}>
+                  SAVE
+                </button>
+              </div>
+            ) : (
+              <div className="nickname-display">
+                <span className="nickname-value">{nickname}</span>
+                <button className="nickname-edit-btn" onClick={() => setEditingName(true)}>
+                  ✏️
+                </button>
+              </div>
+            )}
+          </div>
+
           <div className="end-actions">
             <button className="restart-btn" onClick={() => onRestart(difficulty, theme)}>
               RESTART [ENTER]
@@ -144,6 +188,11 @@ export default function EndScreen({
               CHANGE THEME
             </button>
           </div>
+          <Leaderboard
+            entries={leaderboardEntries}
+            loading={leaderboardLoading}
+            currentUuid={currentUuid}
+          />
         </motion.div>
 
       </motion.div>

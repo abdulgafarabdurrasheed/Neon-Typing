@@ -69,7 +69,7 @@ export function useLeaderboard() {
       });
       await fetchLeaderboard();
     } catch {
-            silently fail
+        //
     } finally {
       setSubmitting(false);
     }

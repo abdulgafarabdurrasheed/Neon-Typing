@@ -13,6 +13,7 @@ import ParticleEmitter from "./components/ParticleCanvas";
 import { useSoundEffects } from "./hooks/useSoundEffects";
 import confetti from "canvas-confetti";
 import type { Difficulty, Theme } from "./data/paragraphs"
+import { useLeaderboard } from "./hooks/useLeaderboard";
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -20,6 +21,13 @@ function App() {
   const inputRef = useRef<HTMLInputElement>(null);
   const wordDisplayRef = useRef<HTMLDivElement>(null);
   const emitterRef = useRef<ParticleEmitter | null>(null);
+  
+  const {
+    entries: leaderboardEntries,
+    loading: leaderboardLoading,
+    uuid: currentUuid,
+    submitScore,
+  } = useLeaderboard();
 
   const {
     state,
@@ -48,9 +56,22 @@ function App() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [state.status, startGame]);
+  }, [state.status, state.difficulty, state.theme, startGame]);
 
   const sound = useSoundEffects();
+
+  useEffect(() => {
+    if (state.status === "gameover" && state.wpm > 0) {
+      submitScore({
+        wpm: state.wpm,
+        accuracy: state.accuracy,
+        maxCombo: state.maxCombo,
+        wordsCompleted: state.wordsCompleted,
+        difficulty: state.difficulty,
+        theme: state.theme,
+      });
+    }
+  }, [state.status, state.wpm, state.accuracy, state.maxCombo, state.wordsCompleted, state.difficulty, state.theme, submitScore]);
 
   useEffect(() => {
     onKeyCorrectRef.current = () => sound.playThock();
@@ -100,7 +121,9 @@ function App() {
     }
 
     onComboMilestoneRef.current = (c: number) => sound.playComboCallout(c);
-    onGameOverRef.current = () => sound.playGameOver();
+    onGameOverRef.current = () => {
+      sound.playGameOver();
+    }
   });
 
   const onInputChange = useCallback(
@@ -197,6 +220,9 @@ function App() {
                 theme={state.theme}
                 onRestart={(d, t) => startGame(d, t)}
                 onChangeTheme={() => setShowIntro(true)}
+                leaderboardEntries={leaderboardEntries}
+                leaderboardLoading={leaderboardLoading}
+                currentUuid={currentUuid}
               />
             )}
           </AnimatePresence>

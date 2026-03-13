@@ -31,9 +31,9 @@ const tutorialSteps = [
   },
 ];
 
-const TOTAL_STEPS = tutorialSteps.length + 2; // +1 for theme, +1 for difficulty
-const THEME_STEP = tutorialSteps.length;      // index 4
-const DIFFICULTY_STEP = tutorialSteps.length + 1; // index 5
+const TOTAL_STEPS = tutorialSteps.length + 2;
+const THEME_STEP = tutorialSteps.length;
+const DIFFICULTY_STEP = tutorialSteps.length + 1;
 
 export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
   const [step, setStep] = useState(initialStep);
@@ -108,7 +108,6 @@ export default function IntroOverlay({ onDismiss, initialStep = 0 }: Props) {
                           className={`theme-btn theme-${t.id} ${theme === t.id ? "selected" : ""}`}
                           onClick={() => setTheme(t.id)}
                         >
-                          <span className="theme-emoji">{t.emoji}</span>
                           <span className="theme-name">{t.name}</span>
                         </button>
                       ))}
