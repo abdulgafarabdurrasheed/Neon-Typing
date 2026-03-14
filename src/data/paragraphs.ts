@@ -182,7 +182,12 @@ const underwater = {
 
 const retro = {
   easy: [
-    "retro"
+    "retro is the best game genre of all time it has pixel art and chiptune music and simple gameplay that is easy to pick up but hard to master",
+    "the one bad thing about it tho is the fact that it can be really hard to find good retro games on modern platforms and sometimes you have to dig through a lot of bad ones to find the gems",
+    "when you start playing retro games you might find that they can be really frustrating at first because they often have unforgiving difficulty and lack of modern conveniences like save points or checkpoints but if you stick with it you can experience a sense of accomplishment and nostalgia that is hard to find in other genres",
+    "other genres can try but the retro genre will always have a special place in the hearts of gamers who grew up playing those classic games and appreciate the unique charm and challenge that they offer",
+    "when you complete a retro level the way the whole thing after you get is unlike any other thing the screen flashes with bright colors and the music gets faster and you feel like you have conquered  a challenge from a bygone era",
+    "for me, and most other people who used to play games in the time when the "
   ].map(p => p.split(" ")),
 
   medium: [
