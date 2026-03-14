@@ -6,6 +6,7 @@ import { toBlob } from "html-to-image";
 import Leaderboard from "./Leaderboard";
 import { getNickname, setNickname } from "../hooks/useLeaderboard";
 import type { LeaderboardEntry } from "../hooks/useLeaderboard";
+import Heatmap from "./Heatmap"
 
 interface Props {
   wpm: number;
@@ -22,6 +23,7 @@ interface Props {
   currentUuid: string;
   onNicknameUpdate?: () => void;
   onPollLeaderboard?: () => void;
+  heatmap: Record<string, { hits: number; misses: number }>;
 }
 
 function getPercentile(wpm: number): number {
@@ -63,6 +65,7 @@ export default function EndScreen({
   currentUuid,
   onNicknameUpdate,
   onPollLeaderboard,
+  heatmap
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
@@ -292,6 +295,8 @@ export default function EndScreen({
                 <span className="card-value">{combo}</span>
               </div>
             </div>
+
+            <Heatmap heatmap={heatmap} />
 
             <div className="card-footer">
               play now at neon-type1.netlify.com{" "}

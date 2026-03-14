@@ -23,6 +23,7 @@ export interface GameState {
   fallingSpeed: number;
   difficulty: Difficulty;
   theme: Theme;
+  heatmap: Record<string, { hits: number; misses: number }>;
   isPaused: boolean;
 }
 
@@ -44,6 +45,7 @@ function pickParagraph(difficulty: Difficulty, theme: Theme): string[] {
 
 export function useGameEngine() {
   const [state, setState] = useState<GameState>({
+    heatmap: {},
     status: "idle",
     difficulty: "easy",
     theme: "cyberpunk",
@@ -136,6 +138,7 @@ export function useGameEngine() {
     const now = Date.now();
 
     setState({
+      heatmap: {},
       status: "playing",
       difficulty,
       theme,
@@ -218,6 +221,20 @@ export function useGameEngine() {
 
       const isCorrect = typedChar === expectedChar;
 
+      const isNewKeystroke = newTypedChars.length > prev.typedChars.length;
+      let heatmap = { ...prev.heatmap };
+
+      if (isNewKeystroke) {
+        const expectedChar = currentWord[prev.typedChars.length]?.toLowerCase();
+        if (expectedChar) {
+          if (!heatmap[expectedChar]) {
+            heatmap[expectedChar] = { hits: 0, misses: 0 };
+          }
+          if (isCorrect) heatmap[expectedChar].hits++;
+          else heatmap[expectedChar].misses++;
+        }
+      }
+
       let correctChars = prev.correctChars;
       let errors = prev.errors;
       let combo = prev.combo;
@@ -277,6 +294,7 @@ export function useGameEngine() {
         }
         return {
           ...prev,
+          heatmap,
           words,
           currentWordIndex,
           typedChars: "",
@@ -296,6 +314,7 @@ export function useGameEngine() {
 
       return {
         ...prev,
+        heatmap,
         typedChars: newTypedChars,
         correctChars,
         totalChars,

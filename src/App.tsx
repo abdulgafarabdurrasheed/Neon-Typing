@@ -264,6 +264,7 @@ function App() {
                 currentUuid={currentUuid}
                 onNicknameUpdate={fetchLeaderboard}
                 onPollLeaderboard={() => fetchLeaderboard()}
+                heatmap={state.heatmap}
               />
             )}
           </AnimatePresence>
