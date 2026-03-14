@@ -434,6 +434,36 @@ html, body {
   min-height: 1.4em;
 }
 
+.pause-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  border-radius: 12px;
+  border: 1px solid var(--neon-cyan);
+  box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.3);
+  color: var(--text-color);
+  font-family: var(--font-mono);
+}
+
+.pause-overlay h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.pause-overlay p {
+  font-size: 1.2rem;
+  color: var(--neon-green);
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
 .end-screen-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;

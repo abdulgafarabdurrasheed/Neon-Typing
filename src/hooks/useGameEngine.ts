@@ -23,6 +23,7 @@ export interface GameState {
   fallingSpeed: number;
   difficulty: Difficulty;
   theme: Theme;
+  isPaused: boolean;
 }
 
 const INITIAL_HEALTH = 100;
@@ -64,6 +65,7 @@ export function useGameEngine() {
     wordsCompleted: 0,
     level: 1,
     fallingSpeed: INITIAL_FALLING_SPEED,
+    isPaused: false,
   });
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -90,6 +92,13 @@ export function useGameEngine() {
     timerRef.current = null;
     healthTimerRef.current = null;
     superSaiyanTimerRef.current = null;
+  }, []);
+
+  const togglePause = useCallback(() => {
+    setState((prev) => {
+      if (prev.status !== "playing") return prev;
+      return { ...prev, isPaused: !prev.isPaused };
+    });
   }, []);
 
   const endGame = useCallback(() => {
@@ -148,11 +157,12 @@ export function useGameEngine() {
       wordsCompleted: 0,
       level: 1,
       fallingSpeed: INITIAL_FALLING_SPEED,
+      isPaused: false,
     });
 
     timerRef.current = setInterval(() => {
       setState((prev) => {
-        if (prev.status !== "playing" || !prev.startTime) return prev;
+        if (prev.status !== "playing" || !prev.startTime || prev.isPaused) return prev;
         const elapsed = (Date.now() - prev.startTime) / 1000;
         const minutes = elapsed / 60;
         const wpm =
@@ -164,7 +174,7 @@ export function useGameEngine() {
 
     healthTimerRef.current = setInterval(() => {
       setState((prev) => {
-        if (prev.status !== "playing") return prev;
+        if (prev.status !== "playing" || prev.isPaused) return prev;
         const config = DIFFICULTY_CONFIG[prev.difficulty];
         const drain = config.healthDrain + (prev.level - 1) * 0.5;
         const newHealth = Math.max(0, prev.health - drain);
@@ -185,7 +195,7 @@ export function useGameEngine() {
 
   const handleInput = useCallback((input: string) => {
     setState((prev) => {
-      if (prev.status !== "playing") return prev;
+      if (prev.status !== "playing" || prev.isPaused) return prev;
 
       const currentWord = prev.words[prev.currentWordIndex];
       if (!currentWord) return prev;
@@ -250,7 +260,12 @@ export function useGameEngine() {
           if (superSaiyanTimerRef.current)
             clearTimeout(superSaiyanTimerRef.current);
           superSaiyanTimerRef.current = setTimeout(() => {
-            setState((p) => ({ ...p, isSuperSaiyan: false, comboMeter: 50 }));
+            setState((p) => {
+              if (p.isPaused) {
+                 //
+              }
+              return { ...p, isSuperSaiyan: false, comboMeter: 50 }
+            });
           }, SUPER_SAIYAN_DURATION);
         }
 
@@ -300,6 +315,7 @@ export function useGameEngine() {
     startGame,
     endGame,
     handleInput,
+    togglePause,
     onKeyCorrectRef,
     onKeyErrorRef,
     onWordCompleteRef,

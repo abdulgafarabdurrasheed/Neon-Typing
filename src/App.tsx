@@ -11,6 +11,7 @@ import "./App.css";
 import BackgroundFX from "./components/BackgroundFX";
 import ParticleEmitter from "./components/ParticleCanvas";
 import { useSoundEffects } from "./hooks/useSoundEffects";
+import { useStreak } from "./hooks/useStreak";
 import confetti from "canvas-confetti";
 import type { Difficulty, Theme } from "./data/paragraphs"
 import { useLeaderboard } from "./hooks/useLeaderboard";
@@ -45,6 +46,7 @@ function App() {
     state,
     startGame,
     handleInput,
+    togglePause,
     onKeyCorrectRef,
     onKeyErrorRef,
     onWordCompleteRef,
@@ -52,6 +54,8 @@ function App() {
     onComboMilestoneRef,
     onGameOverRef,
   } = useGameEngine();
+
+  const { streak, updateStreak } = useStreak();
 
   useEffect(() => {
     emitterRef.current = ParticleEmitter.getInstance();
@@ -64,11 +68,14 @@ function App() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (state.status === "gameover" && e.key === "Enter") startGame(state.difficulty, state.theme);
+      if (state.status === "playing" && e.key === "Escape") {
+        togglePause();
+      }
       if (state.status === "playing") inputRef.current?.focus();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [state.status, state.difficulty, state.theme, startGame]);
+  }, [state.status, state.difficulty, state.theme, startGame, togglePause]);
 
   const sound = useSoundEffects();
 
@@ -82,8 +89,9 @@ function App() {
         difficulty: state.difficulty,
         theme: state.theme,
       });
+      updateStreak();
     }
-  }, [state.status, state.wpm, state.accuracy, state.maxCombo, state.wordsCompleted, state.difficulty, state.theme, submitScore]);
+  }, [state.status, state.wpm, state.accuracy, state.maxCombo, state.wordsCompleted, state.difficulty, state.theme, submitScore, updateStreak]);
 
   useEffect(() => {
     onKeyCorrectRef.current = () => sound.playThock();
@@ -191,7 +199,7 @@ function App() {
                 CONFETTI: {confettiEnabled ? "ON" : "OFF"}
               </button>
             </div>
-            <StatsBar state={state} />
+            <StatsBar state={state} streak={streak} />
           </header>
 
           <HealthBar health={state.health} />
@@ -210,7 +218,7 @@ function App() {
             spellCheck={false}
             onChange={onInputChange}
             value={state.typedChars}
-            disabled={state.status !== "playing"}
+            disabled={state.status !== "playing" || state.isPaused}
           />
 
           <ComboMeter state={state} />
@@ -228,6 +236,18 @@ function App() {
           </div>
 
           <AnimatePresence>
+            {state.isPaused && state.status === "playing" && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="pause-overlay"
+              >
+                <h2>GAME PAUSED</h2>
+                <p>Press ESC to resume</p>
+              </motion.div>
+            )}
+            
             {state.status === "gameover" && (
               <EndScreen
                 wpm={state.wpm}
