@@ -18,6 +18,17 @@ import { useLeaderboard } from "./hooks/useLeaderboard";
 function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [shake, setShake] = useState(false);
+  const [confettiEnabled, setConfettiEnabled] = useState(() => {
+    return localStorage.getItem("neontype-confetti") !== "false";
+  })
+  const handleToggleConfetti = () => {
+    setConfettiEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem("neontype-confetti", next.toString());
+      setTimeout(() => inputRef.current?.focus(), 10);
+      return next;
+    });
+  };
   const inputRef = useRef<HTMLInputElement>(null);
   const wordDisplayRef = useRef<HTMLDivElement>(null);
   const emitterRef = useRef<ParticleEmitter | null>(null);
@@ -83,26 +94,29 @@ function App() {
     };
     onWordCompleteRef.current = (word: string) => {
       sound.playWordComplete();
-      confetti({
-        particleCount: 8,
-        spread: 40,
-        origin: { y: 0.6 },
-        colors: ["#39ff14", "#00f0ff", "#f5f520"],
-        gravity: 1.5,
-        ticks: 80,
-        scalar: 0.6,
-        disableForReducedMotion: true,
-      });
-      const wordEl = wordDisplayRef.current?.querySelector(".word.current");
-      if (wordEl && emitterRef.current) {
-        const rect = wordEl.getBoundingClientRect();
-        emitterRef.current.explode(
-          rect.left + rect.width / 2,
-          rect.top + rect.height / 2,
-          word,
-          state.isSuperSaiyan,
-        );
-      }
+
+      if (confettiEnabled) {
+        confetti({
+          particleCount: 8,
+          spread: 40,
+          origin: { y: 0.6 },
+          colors: ["#39ff14", "#00f0ff", "#f5f520"],
+          gravity: 1.5,
+          ticks: 80,
+          scalar: 0.6,
+          disableForReducedMotion: true,
+        });
+        const wordEl = wordDisplayRef.current?.querySelector(".word.current");
+        if (wordEl && emitterRef.current) {
+          const rect = wordEl.getBoundingClientRect();
+          emitterRef.current.explode(
+            rect.left + rect.width / 2,
+            rect.top + rect.height / 2,
+            word,
+            state.isSuperSaiyan,
+          );
+        }
+      };
     };
 
     onComboMaxRef.current = () => {
@@ -169,10 +183,19 @@ function App() {
           transition={{ duration: 0.5 }}
         >
           <header className="game-header">
-            <h1 className="logo">
-              <span className="neon-green">NEON</span>
-              <span className="neon-pink">TYPE</span>
-            </h1>
+            <div className="title-group">
+              <h1 className="logo">
+                <span className="neon-green">NEON</span>
+                <span className="neon-pink">TYPE</span>
+              </h1>
+              <button
+                className="control-btn"
+                onClick={handleToggleConfetti}
+                tabIndex={-1}
+              >
+                CONFETTI: {confettiEnabled ? "ON" : "OFF"}
+              </button>
+            </div>
             <StatsBar state={state} />
           </header>
 

@@ -1306,3 +1306,29 @@ html, body {
   letter-spacing: 3px;
   margin-top: 0.5rem;
 }
+
+.title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: var(--text-medium);
+}
