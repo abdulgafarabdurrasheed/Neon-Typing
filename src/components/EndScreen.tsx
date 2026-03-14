@@ -76,6 +76,7 @@ export default function EndScreen({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isCopying, setIsCopying] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [viewState, setViewState] = useState<"stats" | "leaderboard" | "heatmap">("stats");
 
   const handleCopyImage = async () => {
     if (!cardRef.current) return;
@@ -140,126 +141,157 @@ export default function EndScreen({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <h1 className="end-title">{themeConfig.gameOverTitle}</h1>
-          {isNewBest && (
-            <motion.div
-              className="new-best-badge"
-              initial={{ scale: 0 }}
-              animate={{ scale: [0, 1.3, 1] }}
-              transition={{ delay: 0.8 }}
-            >
-              ⭐ NEW PERSONAL BEST ⭐
-            </motion.div>
+          {viewState === "stats" && (
+            <>
+              <h1 className="end-title">{themeConfig.gameOverTitle}</h1>
+              {isNewBest && (
+                <motion.div
+                  className="new-best-badge"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [0, 1.3, 1] }}
+                  transition={{ delay: 0.8 }}
+                >
+                  ⭐ NEW PERSONAL BEST ⭐
+                </motion.div>
+              )}
+
+              <div className="end-stats">
+                <div className="stat">
+                  <span className="stat-label">WPM</span>
+                  <span className="stat-value">{wpm}</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Accuracy</span>
+                  <span className="stat-value">{accuracy}%</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Max Combo</span>
+                  <span className="stat-value">{combo}</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Words Completed</span>
+                  <span className="stat-value">{wordsCompleted}</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Time Elapsed</span>
+                  <span className="stat-value">{formatTime(elapsed)}</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Percentile</span>
+                  <span className="stat-value">{percentile}th</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Rank</span>
+                  <span className="stat-value" style={{ color: rank.color }}>
+                    {rank.emoji} {rank.name}
+                  </span>
+                </div>
+              </div>
+
+              <div className="nickname-section">
+                <span className="nickname-label">YOUR NAME:</span>
+                {editingName ? (
+                  <div className="nickname-edit">
+                    <input
+                      className="nickname-input"
+                      type="text"
+                      value={nickname}
+                      onChange={(e) =>
+                        setLocalNickname(e.target.value.slice(0, 16))
+                      }
+                      onKeyDown={(e) => e.key === "Enter" && handleNicknameSubmit()}
+                      maxLength={16}
+                      autoFocus
+                    />
+                    <button
+                      className="nickname-save-btn"
+                      onClick={handleNicknameSubmit}
+                    >
+                      SAVE
+                    </button>
+                  </div>
+                ) : (
+                  <div className="nickname-display">
+                    <span className="nickname-value">{nickname}</span>
+                    <button
+                      className="nickname-edit-btn"
+                      onClick={() => setEditingName(true)}
+                    >
+                      ✏️
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="end-actions">
+                <button
+                  className="restart-btn"
+                  onClick={() => onRestart(difficulty, theme)}
+                >
+                  RESTART [ENTER]
+                </button>
+
+                <button
+                  className={`share-btn ${copySuccess ? "success" : ""}`}
+                  onClick={handleCopyImage}
+                  disabled={isCopying}
+                >
+                  {isCopying
+                    ? "COPYING..."
+                    : copySuccess
+                      ? "COPIED TO CLIPBOARD"
+                      : "COPY STAT CARD"}
+                </button>
+
+                <div className="difficulty-buttons">
+                  {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
+                    <button
+                      key={d}
+                      className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
+                      onClick={() => onRestart(d, theme)}
+                    >
+                      {d.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+                <button className="change-theme-btn" onClick={onChangeTheme}>
+                  CHANGE THEME
+                </button>
+                <div style={{ display: "flex", gap: "1rem" }}>
+                  <button className="share-btn" onClick={() => setViewState("leaderboard")}>
+                    VIEW LEADERBOARD
+                  </button>
+                  <button className="share-btn" onClick={() => setViewState("heatmap")}>
+                    VIEW HEATMAP
+                  </button>
+                </div>
+              </div>
+            </>
           )}
 
-          <div className="end-stats">
-            <div className="stat">
-              <span className="stat-label">WPM</span>
-              <span className="stat-value">{wpm}</span>
+          {viewState === "leaderboard" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", width: "100%" }}>
+              <button className="restart-btn" onClick={() => setViewState("stats")}>
+                BACK TO STATS
+              </button>
+              <Leaderboard
+                entries={leaderboardEntries}
+                loading={leaderboardLoading}
+                currentUuid={currentUuid}
+              />
             </div>
-            <div className="stat">
-              <span className="stat-label">Accuracy</span>
-              <span className="stat-value">{accuracy}%</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Max Combo</span>
-              <span className="stat-value">{combo}</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Words Completed</span>
-              <span className="stat-value">{wordsCompleted}</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Time Elapsed</span>
-              <span className="stat-value">{formatTime(elapsed)}</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Percentile</span>
-              <span className="stat-value">{percentile}th</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Rank</span>
-              <span className="stat-value" style={{ color: rank.color }}>
-                {rank.emoji} {rank.name}
-              </span>
-            </div>
-          </div>
+          )}
 
-          <div className="nickname-section">
-            <span className="nickname-label">YOUR NAME:</span>
-            {editingName ? (
-              <div className="nickname-edit">
-                <input
-                  className="nickname-input"
-                  type="text"
-                  value={nickname}
-                  onChange={(e) =>
-                    setLocalNickname(e.target.value.slice(0, 16))
-                  }
-                  onKeyDown={(e) => e.key === "Enter" && handleNicknameSubmit()}
-                  maxLength={16}
-                  autoFocus
-                />
-                <button
-                  className="nickname-save-btn"
-                  onClick={handleNicknameSubmit}
-                >
-                  SAVE
-                </button>
+          {viewState === "heatmap" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", width: "100%" }}>
+              <button className="restart-btn" onClick={() => setViewState("stats")}>
+                BACK TO STATS
+              </button>
+              <div style={{ marginTop: "1rem" }}>
+                <Heatmap heatmap={heatmap} />
               </div>
-            ) : (
-              <div className="nickname-display">
-                <span className="nickname-value">{nickname}</span>
-                <button
-                  className="nickname-edit-btn"
-                  onClick={() => setEditingName(true)}
-                >
-                  ✏️
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="end-actions">
-            <button
-              className="restart-btn"
-              onClick={() => onRestart(difficulty, theme)}
-            >
-              RESTART [ENTER]
-            </button>
-
-            <button
-              className={`share-btn ${copySuccess ? "success" : ""}`}
-              onClick={handleCopyImage}
-              disabled={isCopying}
-            >
-              {isCopying
-                ? "COPYING..."
-                : copySuccess
-                  ? "COPIED TO CLIPBOARD"
-                  : "COPY STAT CARD"}
-            </button>
-
-            <div className="difficulty-buttons">
-              {(["easy", "medium", "hard"] as Difficulty[]).map((d) => (
-                <button
-                  key={d}
-                  className={`difficulty-btn ${d} ${difficulty === d ? "selected" : ""}`}
-                  onClick={() => onRestart(d, theme)}
-                >
-                  {d.toUpperCase()}
-                </button>
-              ))}
             </div>
-            <button className="change-theme-btn" onClick={onChangeTheme}>
-              CHANGE THEME
-            </button>
-          </div>
-          <Leaderboard
-            entries={leaderboardEntries}
-            loading={leaderboardLoading}
-            currentUuid={currentUuid}
-          />
+          )}
         </motion.div>
       </motion.div>
 
