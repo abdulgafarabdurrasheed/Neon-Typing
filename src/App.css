@@ -299,7 +299,7 @@ html, body {
 }
 
 .word.future {
-  color: var(--text-dim);
+  color: var(--text-medium);
 }
 
 .char { position: relative; transition: color 0.1s; color: var(--text-dim); }

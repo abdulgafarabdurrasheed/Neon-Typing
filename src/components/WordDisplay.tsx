@@ -27,7 +27,7 @@ export default function WordDisplay({ state }: Props) {
                   ${isPast ? "past" : ""} ${isFuture ? "future" : ""}`}
                 initial={{ opacity: 0, y: 20, scale: 0.8 }}
                 animate={{
-                  opacity: isCurrent ? 1 : isFuture ? 0.4 : 0.2,
+                  opacity: isCurrent ? 1 : isFuture ? 0.6 : 0.3,
                   y: 0,
                   scale: isCurrent ? 1.1 : 1,
                 }}
@@ -37,7 +37,7 @@ export default function WordDisplay({ state }: Props) {
               >
                 {isCurrent ? (
                   <>
-                    {word.split("").map((char, ci) => {
+                    {(word + " ").split("").map((char, ci) => {
                       const isTyped = ci < typedChars.length;
                       const isCorrect = isTyped && typedChars[ci] === char;
                       const isWrong = isTyped && typedChars[ci] !== char;
@@ -51,7 +51,7 @@ export default function WordDisplay({ state }: Props) {
                           ${isWrong ? "wrong" : ""}
                           ${isCursor ? "cursor" : ""}`}
                         >
-                          {char}
+                          {char === " " && isWrong ? typedChars[ci] : char === " " ? "\u00A0" : char}
                         </span>
                       );
                     })}

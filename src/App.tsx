@@ -144,13 +144,8 @@ function App() {
   const onInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const val = e.target.value;
-      if (val.endsWith(" ")) {
-        const trimmed = val.trimEnd();
-        if (trimmed.length === 0) return
-        handleInput(trimmed, true);
-        return;
-      }
-      handleInput(val, false);
+      if (val === " ") return;
+      handleInput(val);
     },
     [handleInput],
   );

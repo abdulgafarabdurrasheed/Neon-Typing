@@ -183,20 +183,30 @@ export function useGameEngine() {
     }, 1500);
   }, [stopTimers, endGame]);
 
-  const handleInput = useCallback((input: string, spacePressed = false) => {
+  const handleInput = useCallback((input: string) => {
     setState((prev) => {
       if (prev.status !== "playing") return prev;
 
       const currentWord = prev.words[prev.currentWordIndex];
       if (!currentWord) return prev;
 
+      if (input.length < prev.typedChars.length) {
+        return { ...prev, typedChars: input };
+      }
+
       const newTypedChars = input;
       const totalChars = prev.totalChars + 1;
 
       const lastCharIndex = newTypedChars.length - 1;
-      const isCorrect =
-        lastCharIndex >= 0 &&
-        newTypedChars[lastCharIndex] === currentWord[lastCharIndex];
+      const typedChar = newTypedChars[lastCharIndex];
+      const expectedChar =
+        lastCharIndex < currentWord.length
+          ? currentWord[lastCharIndex]
+          : lastCharIndex === currentWord.length
+            ? " "
+            : undefined;
+
+      const isCorrect = typedChar === expectedChar;
 
       let correctChars = prev.correctChars;
       let errors = prev.errors;
@@ -223,8 +233,7 @@ export function useGameEngine() {
         onKeyErrorRef.current?.();
       }
 
-      const requireSpace = prev.difficulty !== "easy";
-      if (newTypedChars === currentWord && (!requireSpace || spacePressed)) {
+      if (newTypedChars === currentWord + " ") {
         const nextIndex = prev.currentWordIndex + 1;
         const wordsCompleted = prev.wordsCompleted + 1;
         const newComboMeter = Math.min(100, comboMeter + COMBO_FILL_PER_WORD);
