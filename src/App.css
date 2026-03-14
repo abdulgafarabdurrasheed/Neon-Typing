@@ -1327,7 +1327,7 @@ html, body {
 }
 
 .card-value.neon-cyan {
-  color: var(--neon-cyan);
+  color: black;
 }
 
 .card-footer {

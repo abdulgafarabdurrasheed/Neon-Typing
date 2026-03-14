@@ -76,7 +76,10 @@ export function useGameEngine() {
     null,
   );
   const stateRef = useRef(state);
-  stateRef.current = state;
+  
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
 
   const onKeyCorrectRef = useRef<(() => void) | undefined>(undefined);
   const onKeyErrorRef = useRef<(() => void) | undefined>(undefined);
@@ -222,7 +225,7 @@ export function useGameEngine() {
       const isCorrect = typedChar === expectedChar;
 
       const isNewKeystroke = newTypedChars.length > prev.typedChars.length;
-      let heatmap = { ...prev.heatmap };
+      const heatmap = { ...prev.heatmap };
 
       if (isNewKeystroke) {
         const expectedChar = currentWord[prev.typedChars.length]?.toLowerCase();
