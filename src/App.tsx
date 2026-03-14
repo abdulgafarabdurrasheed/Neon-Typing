@@ -4,6 +4,7 @@ import { useGameEngine } from "./hooks/useGameEngine";
 import WordDisplay from "./components/WordDisplay";
 import ComboMeter from "./components/ComboMeter";
 import HealthBar from "./components/HealthBar";
+import { WpmBar } from "./components/WpmBar";
 import StatsBar from "./components/StatsBar";
 import EndScreen from "./components/EndScreen";
 import IntroOverlay from "./components/IntroOverlay";
@@ -164,6 +165,11 @@ function App() {
     setTimeout(() => inputRef.current?.focus(), 100);
   }, [startGame]);
 
+  const storedBest = JSON.parse(localStorage.getItem("neontype-best") || "{}");
+  const storedPB = storedBest.wpm || 0;
+  const storedLast = parseInt(localStorage.getItem("neontype-last-wpm") || "0", 10);
+  const globalBest = leaderboardEntries.length > 0 ? leaderboardEntries[0].wpm : 0;
+
   return (
     <div
       className={`app theme-${state.theme} ${shake ? "shake" : ""} ${state.isSuperSaiyan ? "super-saiyan-mode" : ""}`}
@@ -201,6 +207,13 @@ function App() {
             </div>
             <StatsBar state={state} streak={streak} />
           </header>
+
+          <WpmBar 
+              currentWpm={state.wpm} 
+              personalBestWpm={storedPB} 
+              globalBestWpm={globalBest}
+              lastWpm={storedLast} 
+          />
 
           <HealthBar health={state.health} />
           <div ref={wordDisplayRef}>

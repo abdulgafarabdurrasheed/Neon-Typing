@@ -129,6 +129,8 @@ export function useGameEngine() {
           }),
         );
       }
+      
+      localStorage.setItem("neontype-last-wpm", wpm.toString());
 
       return { ...prev, status: "gameover", wpm, accuracy, elapsed };
     });
