@@ -9,12 +9,14 @@ interface WpmBarProps {
 }
 
 export const WpmBar: React.FC<WpmBarProps> = ({ currentWpm, personalBestWpm, globalBestWpm, lastWpm = 0 }) => {
-    const maxWpm = Math.max(currentWpm, personalBestWpm, globalBestWpm, lastWpm, 100) + 10;
-
-    const currentPercentage = Math.min((currentWpm / maxWpm) * 100, 100);
-    const pbPercentage = Math.min((personalBestWpm / maxWpm) * 100, 100);
-    const globalPercentage = Math.min((globalBestWpm / maxWpm) * 100, 100);
-    const lastPercentage = Math.min((lastWpm / maxWpm) * 100, 100);
+    const isUserNumberOne = personalBestWpm >= globalBestWpm && globalBestWpm > 0;
+    const activeGlobal = isUserNumberOne ? 0 : globalBestWpm;
+    const highestActiveWpm = Math.max(currentWpm, personalBestWpm, activeGlobal, lastWpm, 100);
+    const scaleMax = highestActiveWpm / 0.95;
+    const currentPercentage = Math.min((currentWpm / scaleMax) * 100, 100);
+    const pbPercentage = Math.min((personalBestWpm / scaleMax) * 100, 100);
+    const lastPercentage = Math.min((lastWpm / scaleMax) * 100, 100);
+    const globalPercentage = Math.min((globalBestWpm / scaleMax) * 100, 100);
 
     const beatLast = currentWpm >= lastWpm && lastWpm > 0;
     const beatPB = currentWpm >= personalBestWpm && personalBestWpm > 0;
@@ -58,10 +60,10 @@ export const WpmBar: React.FC<WpmBarProps> = ({ currentWpm, personalBestWpm, glo
           </div>
         )}
 
-        {globalBestWpm > 0 && (
+        {globalBestWpm > 0 && !isUserNumberOne && (
           <div className={`wpm-marker global-marker ${beatGlobal ? 'passed' : ''}`} style={{ left: `${globalPercentage}%` }}>
             <div className="marker-line" />
-            <span className="marker-label">#1</span>
+            {!beatGlobal && <span className="marker-label">#1</span>}
           </div>
         )}
       </div>
