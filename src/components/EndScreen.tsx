@@ -294,7 +294,7 @@ export default function EndScreen({
             </div>
 
             <div className="card-footer">
-              play now at neon-type.netlify.com{" "}
+              play now at neon-type1.netlify.com{" "}
             </div>
           </div>
         </div>

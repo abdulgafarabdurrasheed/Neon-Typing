@@ -139,15 +139,44 @@ const cyberpunk = {
 
 const underwater = {
   easy: [
-    "underwater"
+    "the seaweed is always greener in somebody else lake you dream about going up there but that is a big mistake",
+    "just look at the world around you down here on the ocean floor such wonderful things surround you what more is you looking for",
+    "under the sea under the sea darling its better down where it's wetter take it from me up on the shore they work all day",
+    "out in the sun they slave away while we devoting full time to floating under the sea the fish in the sea is happy",
+    "as off to the waves they roll the fish on the land aint happy they sad cause they in the bowl but fish in the bowl is lucky",
+    "they in for a worser fate one day when the boss get hungry guess whos gonna be on the plate oh no under the sea under the sea",
+    "nobody beat us fry us and eat us in fricasee we what the landfolk love to cook under the sea we off the hook we got no troubles",
+    "life is the bubbles under the sea watch this the nute play the flute the carp play the harp the plaise play the base and they sounding sharp",
+    "the chub play the gob the tub play the tub the nuke is the duke of soul yeah the ray he can play the ....... the blackfish she sings",
+    "the smelt and the sprat they know where its at and oh that blowfish blow.. musicals.. yeah under the sea under the sea",
+    "where the sardines begin the beguin it's music to me what do they got a lot of sand weve got a hot crustacean band yeah each little",
+    "clam here know how to jam here under the sea each little whale here know how to wail here under the sea each little mug here cooked in",
+    "a rug here thats why its hotter under the water girl we in luck here down in the muck here under the sea"
   ].map(p => p.split(" ")),
 
   medium: [
-    "Underwater"
+    "The way the reefs sway to the side when the waves hit the current is a phenomenon called: 'The Dance of the Corals' and it creates a mesmerizing underwater ballet that attracts divers from around the world to witness this natural spectacle. It happens in the waters of: haiti",
+    "When you go deep into the waters, you can find a hidden world of bioluminescent creatures that light up the darkness with their glowing bodies. This phenomenon is known as: 'The Glow of the Abyss' and it creates a surreal and magical atmosphere for those lucky enough to witness it. It happens in the waters of: ",
+    'The underwater world is a vast and mysterious realm that holds countless secrets and wonders. From the vibrant coral reefs teeming with colorful fish to the eerie depths where strange creatures lurk, there is always something new to discover beneath the waves. The ocean is a place of beauty and danger, where the forces of nature can be both awe-inspiring and terrifying. Whether you are a seasoned diver or simply a curious observer, the underwater world offers endless opportunities for exploration and adventure.',
+    'while the joy of the ocean is undeniable it is also a reminder of our responsibility to protect and preserve this precious resource for future generations. The underwater world is a delicate ecosystem that relies on the balance of its inhabitants and the health of its environment. Pollution overfishing and climate change are just a few of the threats that endanger the marine life and habitats that call the ocean home. It is up to us to take action and ensure that the beauty and wonder of the underwater world can be enjoyed for years to come.',
   ].map(p => p.split(" ")),
 
   hard: [
-    "Un!Der(wat)'er'."
+    "SONAR_PING[07]: Depth=3,841m; pressure='38.1MPa' && visibility < 2.5m!",
+    "submarine.connect('abyss://sector-9'); await dive({ ballast: 'neutral', lights: true });",
+    "const coralMap = reefs.filter(r => r.health >= 0.82 && r.zone !== 'protected');",
+    "if (oxygenLevel <= 21 && hullIntegrity > 0.95) { deploy_emergency_buoy(); }",
+    "GPS lost @ 24°31'12\"N, 71°58'45\"W — switching to inertial-navigation mode...",
+    "SELECT * FROM species WHERE habitat='deep_ocean' AND danger_level >= 7 ORDER BY depth DESC;",
+    "logger.warn(\"KRAKEN_ALERT::tentacle_count=08; evasive_pattern='spiral-beta'\");",
+    "curl -X GET https://ocean.example.net/api/v1/trenches -H 'Accept: application/json'",
+    "Temperature anomaly detected: ΔT=-4.7°C; salinity=35.2‰; current='SE@12kn';",
+    "for (const fish of school) { if (fish?.tag === '#A7-DELTA') markForTracking(fish); }",
+    "RegExp: /^([A-Z]{3}-\\d{2})::(reef|trench|kelp)\\/(north|south|east|west)$/",
+    "docker exec -it submersible_01 sh -c \"tail -n 50 /var/log/sonar.log | grep ERROR\"",
+    "BIO-LUMEN_STATUS={ active: true, intensity: 0.73, color: '#4df3ff', pulse_ms: 1200 };",
+    "ssh diver@10.0.8.14 -p 2202 && sudo systemctl restart pressure-monitor.service",
+    "Mission note: \"Descend past the black coral wall, avoid C4V3-3ELs, retrieve artifact #19-B.\""
   ].map(p => p.split(" ")),
 };
 
