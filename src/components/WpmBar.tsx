@@ -12,7 +12,7 @@ export const WpmBar: React.FC<WpmBarProps> = ({ currentWpm, personalBestWpm, glo
     const isUserNumberOne = personalBestWpm >= globalBestWpm && globalBestWpm > 0;
     const activeGlobal = isUserNumberOne ? 0 : globalBestWpm;
 
-    const highestActiveWpm = Math.max(currentWpm, personalBestWpm, activeGlobal, lastWpm, 100);
+    const highestActiveWpm = Math.max(currentWpm, personalBestWpm, activeGlobal, lastWpm, 15);
     const scaleMax = highestActiveWpm / 0.95;
     
     const currentPercentage = Math.min((currentWpm / scaleMax) * 100, 100);
@@ -23,6 +23,17 @@ export const WpmBar: React.FC<WpmBarProps> = ({ currentWpm, personalBestWpm, glo
     const beatLast = currentWpm >= lastWpm && lastWpm > 0;
     const beatPB = currentWpm >= personalBestWpm && personalBestWpm > 0;
     const beatGlobal = currentWpm >= globalBestWpm && globalBestWpm > 0;
+
+    const draggedLabels = [];
+    if (beatLast && lastWpm !== personalBestWpm) draggedLabels.push("LAST");
+    if (beatPB) draggedLabels.push("PB");
+
+    if (isUserNumberOne) {
+        if (beatPB) draggedLabels.push("#1");
+    } else {
+        if (beatGlobal) draggedLabels.push("#1");
+    }
+    const followText = draggedLabels.join(" + ");
 
     let fillStatusClass = 'normal';
     if (beatGlobal) fillStatusClass = 'beat-global';
@@ -46,6 +57,15 @@ export const WpmBar: React.FC<WpmBarProps> = ({ currentWpm, personalBestWpm, glo
                     transition={{ type: 'spring', stiffness: 50, damping: 15 }}
                 >
                     <span className="marker-label">NOW</span>
+
+                    {followText && (
+                      <span 
+                          className="marker-label follow-label" 
+                          style={{ top: '-28px', color: '#fff', textShadow: '0 0 8px #fff', whiteSpace: 'nowrap' }}
+                      >
+                          {followText}
+                      </span>
+                  )}
                     
                     {beatGlobal && !isUserNumberOne && (
                         <span 
@@ -59,22 +79,22 @@ export const WpmBar: React.FC<WpmBarProps> = ({ currentWpm, personalBestWpm, glo
 
                 {lastWpm > 0 && lastWpm !== personalBestWpm && (
                     <div className={`wpm-marker last-marker ${beatLast ? 'passed' : ''}`} style={{ left: `${lastPercentage}%` }}>
-                        <div className="marker-line ghost-line" style={{ borderLeft: '2px dashed rgba(255,255,255,0.3)', background: 'transparent' }} />
-                        <span className="marker-label" style={{ top: '26px', opacity: 0.5 }}>LAST</span>
+                        <div className="marker-line" />
+                        {!beatLast && <span className="marker-label">LAST</span>}
                     </div>
                 )}
 
                 {personalBestWpm > 0 && (
                     <div className={`wpm-marker pb-marker ${beatPB ? 'passed' : ''}`} style={{ left: `${pbPercentage}%` }}>
                         <div className="marker-line" />
-                        <span className="marker-label">PB</span>
+                        {!beatPB && <span className="marker-label">PB</span>}
                     </div>
                 )}
 
                 {globalBestWpm > 0 && !isUserNumberOne && (
                     <div className={`wpm-marker global-marker ${beatGlobal ? 'passed' : ''}`} style={{ left: `${globalPercentage}%` }}>
                         <div className="marker-line" />
-                        
+
                         {!beatGlobal && <span className="marker-label">#1</span>}
                     </div>
                 )}
