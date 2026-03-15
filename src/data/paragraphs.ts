@@ -139,26 +139,32 @@ const cyberpunk = {
 
 const underwater = {
   easy: [
-    "the seaweed is always greener in somebody else lake you dream about going up there but that is a big mistake",
-    "just look at the world around you down here on the ocean floor such wonderful things surround you what more is you looking for",
-    "under the sea under the sea darling its better down where it's wetter take it from me up on the shore they work all day",
-    "out in the sun they slave away while we devoting full time to floating under the sea the fish in the sea is happy",
-    "as off to the waves they roll the fish on the land aint happy they sad cause they in the bowl but fish in the bowl is lucky",
-    "they in for a worser fate one day when the boss get hungry guess whos gonna be on the plate oh no under the sea under the sea",
-    "nobody beat us fry us and eat us in fricasee we what the landfolk love to cook under the sea we off the hook we got no troubles",
-    "life is the bubbles under the sea watch this the nute play the flute the carp play the harp the plaise play the base and they sounding sharp",
-    "the chub play the gob the tub play the tub the nuke is the duke of soul yeah the ray he can play the ....... the blackfish she sings",
-    "the smelt and the sprat they know where its at and oh that blowfish blow.. musicals.. yeah under the sea under the sea",
-    "where the sardines begin the beguin it's music to me what do they got a lot of sand weve got a hot crustacean band yeah each little",
-    "clam here know how to jam here under the sea each little whale here know how to wail here under the sea each little mug here cooked in",
-    "a rug here thats why its hotter under the water girl we in luck here down in the muck here under the sea"
+    "the pressure builds as you descend further into the crushing depths of the midnight zone",
+    "bioluminescent creatures light up the darkness with their eerie glow creating a surreal underwater light show",
+    "the coral reefs sway gently with the rhythm of the ocean currents creating a mesmerizing dance of colors and shapes",
+    "schools of fish move in perfect harmony like a living breathing organism responding to the slightest change in the water",
+    "schools of bioluminescent jellyfish drift past the viewport like tiny glowing stars in the dark",
+    "a massive shadow moves just beyond the reach of the submarine floodlights waiting patiently",
+    "coral reefs bloom in vibrant colors hiding predators that stalk their prey in absolute silence",
+    "the ocean is a vast and mysterious world teeming with life and wonder but also danger and darkness",
+    "the sound of whales singing echoes through the water a haunting melody that resonates with the soul",
+    "sunlight fades into an endless abyss of blue where only the strange and terrifying survive",
+    "the hum of the engine is the only sound keeping you company in the vast empty ocean",
+    "giant kelp forests sway back and forth in the gentle current of the shallow coastal waters",
+    "you hold your breath as the oxygen meter slowly ticks down closer and closer to zero"
   ].map(p => p.split(" ")),
 
   medium: [
     "The way the reefs sway to the side when the waves hit the current is a phenomenon called: 'The Dance of the Corals' and it creates a mesmerizing underwater ballet that attracts divers from around the world to witness this natural spectacle. It happens in the waters of: haiti",
-    "When you go deep into the waters, you can find a hidden world of bioluminescent creatures that light up the darkness with their glowing bodies. This phenomenon is known as: 'The Glow of the Abyss' and it creates a surreal and magical atmosphere for those lucky enough to witness it. It happens in the waters of: ",
+    "When you go deep into the waters, you can find a hidden world of bioluminescent creatures that light up the darkness with their glowing bodies. This phenomenon is known as: 'The Glow of the Abyss' and it creates a surreal and magical atmosphere for those lucky enough to witness it. It happens in the waters of: Puerto Rico",
     'The underwater world is a vast and mysterious realm that holds countless secrets and wonders. From the vibrant coral reefs teeming with colorful fish to the eerie depths where strange creatures lurk, there is always something new to discover beneath the waves. The ocean is a place of beauty and danger, where the forces of nature can be both awe-inspiring and terrifying. Whether you are a seasoned diver or simply a curious observer, the underwater world offers endless opportunities for exploration and adventure.',
     'while the joy of the ocean is undeniable it is also a reminder of our responsibility to protect and preserve this precious resource for future generations. The underwater world is a delicate ecosystem that relies on the balance of its inhabitants and the health of its environment. Pollution overfishing and climate change are just a few of the threats that endanger the marine life and habitats that call the ocean home. It is up to us to take action and ensure that the beauty and wonder of the underwater world can be enjoyed for years to come.',
+    "The Mariana Trench is the deepest oceanic trench on Earth, reaching a maximum known depth of nearly eleven thousand meters. It is said if Mount Everest were dropped into the trench, its peak would still be over a mile underwater.",
+    "Marine biologists recently discovered a new species of giant squid that utilizes bioluminescent photophores to disorient its prey.",
+    "The structural integrity of the deep sea research vessel was severely compromised when the external pressure exceeded safe operational limits.",
+    "Hydrothermal vents on the ocean floor support unique ecosystems that thrive in extreme conditions without sunlight.",
+    "Hydrothermal vents support incredibly diverse ecosystems, relying entirely on chemosynthesis rather than sunlight for their fundamental energy source",
+    "Echo sounder readings indicated a massive, unidentified biological anomaly moving rapidly toward the submerged research station."
   ].map(p => p.split(" ")),
 
   hard: [
@@ -176,7 +182,13 @@ const underwater = {
     "docker exec -it submersible_01 sh -c \"tail -n 50 /var/log/sonar.log | grep ERROR\"",
     "BIO-LUMEN_STATUS={ active: true, intensity: 0.73, color: '#4df3ff', pulse_ms: 1200 };",
     "ssh diver@10.0.8.14 -p 2202 && sudo systemctl restart pressure-monitor.service",
-    "Mission note: \"Descend past the black coral wall, avoid C4V3-3ELs, retrieve artifact #19-B.\""
+    "Mission note: \"Descend past the black coral wall, avoid C4V3-3ELs, retrieve artifact #19-B.\"",
+    "SONAR_PING: Target acquired at coordinates [45°N, 12°W] — moving at 45.2 knots!",
+    "Pressure reading at 10,000m: 1,086 bars (15,750 psi). Structural failure imminent.",
+    "const KRAKEN_AWAKENS = (depth >= 11000) ? triggerEvent('hull_breach', { severity: 'CRITICAL' }) : null;",
+    "WARNING: O2 levels dropping below 14.5% | CO2 scrubbers offline | Backup power at 8%",
+    "Species classification: Architeuthis dux. Specimen length > 14m. Tentacle velocity = 12m/s.",
+    "fetch('https://ocean-api.com/v1/telemetry', { headers: { 'Authorization': 'Bearer 0x99F_DEEP' } });"
   ].map(p => p.split(" ")),
 };
 
@@ -187,15 +199,32 @@ const retro = {
     "when you start playing retro games you might find that they can be really frustrating at first because they often have unforgiving difficulty and lack of modern conveniences like save points or checkpoints but if you stick with it you can experience a sense of accomplishment and nostalgia that is hard to find in other genres",
     "other genres can try but the retro genre will always have a special place in the hearts of gamers who grew up playing those classic games and appreciate the unique charm and challenge that they offer",
     "when you complete a retro level the way the whole thing after you get is unlike any other thing the screen flashes with bright colors and the music gets faster and you feel like you have conquered  a challenge from a bygone era",
-    "for me, and most other people who used to play games in the time when the arcades were the only place to find new and exciting titles those memories are priceless and bring back a feeling of pure joy and wonder"
+    "for me, and most other people who used to play games in the time when the arcades were the only place to find new and exciting titles those memories are priceless and bring back a feeling of pure joy and wonder",
+    "insert quarter to continue your quest to save the princess from the evil pixelated dragon",
+    "the glowing arcade cabinet hums with static electricity as you grip the faded plastic joystick",
+    "your thumb blisters from mashing the jump button while trying to dodge the endless barell rolls",
+    "eating glowing dots while running away from colorful ghosts is a highly stressful weekend activity",
+    "the high score table is a sacred battleground ",
+    "the high score table is dominated by three mysterious initials that nobody in town recognizes",
+    "neon lights reflect off the sticky carpet of the local arcade on a friday night",
+    "you drop your last token into the slot and pray that this time you actually go on to beat the final boss and complete the retro game"
   ].map(p => p.split(" ")),
 
   medium: [
-    "Retro"
+    "The golden age of arcade video games peaked in the early nineteen eighties, defined by colorful pixel art and unforgiving difficulty spikes.",
+    "Cathode-ray tube monitors provided a distinct visual aesthetic that modern flat screens struggle to accurately replicate without heavy filtering.",
+    "Achieving the legendary kill screen in classic arcade retro games required playing perfectly until the 8-bit integer overflowed and crashed the level.",
+    "Chiptune music relied on programmable sound generator chips to create memorable melodies using only sine, square, and sawtotth waves",
+    "The fighting game community was born in crowded arcades where players would place their quarters on the machine to claim the next match",
   ].map(p => p.split(" ")),
 
   hard: [
-    "ReT1!r'o(.)'"
+   "Up, Up, Down, Down, Left, Right, Left, Right, B, A, Start — 30 lives granted!",
+    "Memory address 0x07A2 holds the player's current score, capped at 999,999 before triggering a rollover bug.",
+    "function spawnInvaders(rows=5, cols=11) { return new Swarm({ speed: 1.25, fireRate: 0.05 }); }",
+    "ERROR: P1_CONTROLLER_DISCONNECTED | Insert Coin(s) [ 1/2 ] | Press START to join.",
+    "SoundTest: Track_04 (FM Synth @ 44.1kHz) // Pitch bend = +12 semitones, LFO depth = 50%",
+    "if (player.lives === 0 && !hasContinues) { renderGameOverScreen(); resetHighScore(); }"
   ].map(p => p.split(" ")),
 }
 
