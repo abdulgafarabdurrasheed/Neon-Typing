@@ -21,7 +21,7 @@ function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [shake, setShake] = useState(false);
   const [confettiEnabled, setConfettiEnabled] = useState(() => {
-    return localStorage.getItem("neontype-confetti") !== "false";
+    return localStorage.getItem("neontype-confetti") == "false";
   })
   const handleToggleConfetti = () => {
     setConfettiEnabled((prev) => {
