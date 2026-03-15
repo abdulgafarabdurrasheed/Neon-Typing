@@ -230,15 +230,30 @@ const retro = {
 
 const fantasy = {
   easy: [
-    "fantasy"
+    "the old wizard strokes his long white beard while reading an ancient scroll by candlelight",
+    "your heavy steel broadsword gleams in the morning sun as the goblin horde approaches the gates",
+    "a glowing option restores your health but leaves a terrible taste of bitter herbs in your mouth",
+    "the dragon rests on a massive mountain of gold coins breathing smoke into the cavern roof",
+    "you roll a natural twenty and land a critical strike right between the eyes of the beast",
+    "the tavern is filled with the sound of clashing mugs and bards singing tales of old heroes",
+    "you carefully pick the lock on the wooden chest hoping it is not actually a mimic disguise",
   ].map(p => p.split(" ")),
 
   medium: [
-    "Fantasy"
+    "The ancient elves forged the legendary blade deep within the enchanted forest, blessing it with runes of absolute clarity and devastating power.",
+    "Casting a high-tier pyromancy spell requires an intense focus of arcane energy and a physical catalyst to channel the destructive flames.",
+    "The kingdom fell into ruin after the dark necromancer shattered the protective crystal and unleashed an army of restless undead upon the capital.",
+    "Alchemy is an imprecise science, demanding careful measurements of rare botanical ingredients and powdered monster scales to brew potent elixirs.",
+    "A seasoned adventuring party always ensures they have a balanced composition of melee fighters, magical support, and ranged damage dealers."
   ].map(p => p.split(" ")),
 
   hard: [
-    "Fan4(ta-)--sy!!"
+    "Roll 4d6 (drop the lowest) for STR, DEX, CON, INT, WIS, and CHA before finalizing your character sheet.",
+    "Incantation: 'Ignis Aurum Probat' -> Casts [Fireball Level 5] dealing 8d6 fire damage (Reflex save DC 16 for half).",
+    "Inventory Weight: 114.5 / 120.0 lbs. You are encumbered! Speed reduced by 10ft/turn.",
+    "class Paladin extends Character { smite(target) { return target.alignment === 'EVIL' ? baseDmg * 2 : baseDmg; } }",
+    "Loot table drop rate: Legendary Sword of Aeons (0.05%), Epic Mithril Armor (1.2%), Common Healing Potion (45.0%).",
+    "let manaCost = baseCost * (1 - (player.intelligence / 100)) + spellModifiers.overcast;"
   ].map(p => p.split(" ")),
 }
 
