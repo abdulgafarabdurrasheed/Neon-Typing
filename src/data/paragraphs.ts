@@ -151,7 +151,10 @@ const underwater = {
     "sunlight fades into an endless abyss of blue where only the strange and terrifying survive",
     "the hum of the engine is the only sound keeping you company in the vast empty ocean",
     "giant kelp forests sway back and forth in the gentle current of the shallow coastal waters",
-    "you hold your breath as the oxygen meter slowly ticks down closer and closer to zero"
+    "you hold your breath as the oxygen meter slowly ticks down closer and closer to zero",
+    "the ocean is a place of beauty and danger where every dive is an adventure into the unknown",
+    "the submarine sonar picks up an unidentified object moving rapidly in the distance sending a distress signal",
+    "when you reach the bottom of the ocean the pressure is so intense that it feels like the water itself is trying to crush you into oblivion",
   ].map(p => p.split(" ")),
 
   medium: [
@@ -164,7 +167,12 @@ const underwater = {
     "The structural integrity of the deep sea research vessel was severely compromised when the external pressure exceeded safe operational limits.",
     "Hydrothermal vents on the ocean floor support unique ecosystems that thrive in extreme conditions without sunlight.",
     "Hydrothermal vents support incredibly diverse ecosystems, relying entirely on chemosynthesis rather than sunlight for their fundamental energy source",
-    "Echo sounder readings indicated a massive, unidentified biological anomaly moving rapidly toward the submerged research station."
+    "Echo sounder readings indicated a massive, unidentified biological anomaly moving rapidly toward the submerged research station.",
+    "The ocean's thermohaline circulation, often referred to as the 'global conveyor belt,' plays a crucial role in regulating Earth's climate by redistributing heat and nutrients across the planet.",
+    "The Great Barrier Reef, the world's largest coral reef system, is home to over 1,500 species of fish and 400 types of coral, making it one of the most biodiverse ecosystems on the planet.",
+    "For  the most part, the ocean remains unexplored, with estimates suggesting that over 80% of the underwater world is still a mystery to scientists, harboring countless undiscovered species and geological formations",
+    "The Sperm Whale, the largest toothed predator on Earth, can dive to depths of over 2,000 meters and hold its breath for 90 minutes while hunting for giant squid.",
+    "It has Caught up with us! The giant squid's tentacles wrap around the hull, causing a violent shaking and triggering multiple system failures. Emergency protocols activated, but the creature's strength is overwhelming. We must find a way to break free before it's too late!"
   ].map(p => p.split(" ")),
 
   hard: [
@@ -188,7 +196,8 @@ const underwater = {
     "const KRAKEN_AWAKENS = (depth >= 11000) ? triggerEvent('hull_breach', { severity: 'CRITICAL' }) : null;",
     "WARNING: O2 levels dropping below 14.5% | CO2 scrubbers offline | Backup power at 8%",
     "Species classification: Architeuthis dux. Specimen length > 14m. Tentacle velocity = 12m/s.",
-    "fetch('https://ocean-api.com/v1/telemetry', { headers: { 'Authorization': 'Bearer 0x99F_DEEP' } });"
+    "fetch('https://ocean-api.com/v1/telemetry', { headers: { 'Authorization': 'Bearer 0x99F_DEEP' } });",
+    "If (currentZone === 'abyssal' && visibility < 1.0) { activateSonar(); } else { maintainCourse(); }",
   ].map(p => p.split(" ")),
 };
 
@@ -204,7 +213,7 @@ const retro = {
     "the glowing arcade cabinet hums with static electricity as you grip the faded plastic joystick",
     "your thumb blisters from mashing the jump button while trying to dodge the endless barell rolls",
     "eating glowing dots while running away from colorful ghosts is a highly stressful weekend activity",
-    "the high score table is a sacred battleground ",
+    "the high score table is a sacred battleground where players compete for bragging rights and the elusive top spot often marked by three mysterious initials that nobody in town recognizes",
     "the high score table is dominated by three mysterious initials that nobody in town recognizes",
     "neon lights reflect off the sticky carpet of the local arcade on a friday night",
     "you drop your last token into the slot and pray that this time you actually go on to beat the final boss and complete the retro game"
@@ -216,6 +225,9 @@ const retro = {
     "Achieving the legendary kill screen in classic arcade retro games required playing perfectly until the 8-bit integer overflowed and crashed the level.",
     "Chiptune music relied on programmable sound generator chips to create memorable melodies using only sine, square, and sawtotth waves",
     "The fighting game community was born in crowded arcades where players would place their quarters on the machine to claim the next match",
+    "The high score table was a sacred battleground where players competed for bragging rights and the elusive top spot often marked by three mysterious initials that nobody in town recognized",
+    "For a highly seasoned retro gamer, the sight of a pixelated boss character emerging from the screen can evoke a rush of adrenaline and nostalgia that transports them back to their childhood days spent in arcades.",
+    "The pico 8 fantasy console has become a beloved platform for indie developers to create and share their own retro-inspired games, fostering a vibrant community of pixel artists and chiptune musicians who celebrate the aesthetics and mechanics of classic gaming while pushing the boundaries of creativity within the constraints of the fantasy hardware."
   ].map(p => p.split(" ")),
 
   hard: [
@@ -238,6 +250,13 @@ const fantasy = {
     "the tavern is filled with the sound of clashing mugs and bards singing tales of old heroes",
     "you carefully pick the lock on the wooden chest hoping it is not actually a mimic disguise",
     "the ancient prophecy foretells of a hero who will rise to defeat the dark lord and save the kingdom from eternal darkness",
+    "the enchanted forest is home to mystical creatures and hidden secrets waiting to be discovered by brave adventurers",
+    "the legendary blade is said to possess immense power and can only be wielded by those deemed worthy by the ancient elves",
+    "for the magical elixir to work you must gather rare ingredients from the darkest corners of the realm and brew them under the light of a full moon",
+    "the kingdom is in peril as a dark necromancer has shattered the protective crystal and unleashed an army of restless undead upon the capital city",
+    "casting a high-tier pyromancy spell requires an intense focus of arcane energy and a physical catalyst to channel the destructive flames",
+    "alchemy is an imprecise science demanding careful measurements of rare botanical ingredients and powdered monster scales to brew potent elixirs",
+    "a seasoned adventuring party always ensures they have a balanced composition of melee fighters magical support and ranged damage dealers to overcome the challenges of the dungeon",
   ].map(p => p.split(" ")),
 
   medium: [
@@ -245,7 +264,8 @@ const fantasy = {
     "Casting a high-tier pyromancy spell requires an intense focus of arcane energy and a physical catalyst to channel the destructive flames.",
     "The kingdom fell into ruin after the dark necromancer shattered the protective crystal and unleashed an army of restless undead upon the capital.",
     "Alchemy is an imprecise science, demanding careful measurements of rare botanical ingredients and powdered monster scales to brew potent elixirs.",
-    "A seasoned adventuring party always ensures they have a balanced composition of melee fighters, magical support, and ranged damage dealers."
+    "A seasoned adventuring party always ensures they have a balanced composition of melee fighters, magical support, and ranged damage dealers.",
+    "The ancient prophecy foretells of a hero who will rise to defeat the dark lord and save the kingdom from eternal darkness",
   ].map(p => p.split(" ")),
 
   hard: [
