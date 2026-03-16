@@ -25,8 +25,9 @@ export interface GameState {
   theme: Theme;
   heatmap: Record<string, { hits: number; misses: number }>;
   isPaused: boolean;
-  currentRunKeystrokes: number[];
-  ghostData: number[];
+  paragraphCount: number;
+  currentRunKeystrokes: { p: number; c: number; t: number }[];
+  ghostData: { p: number; c: number; t: number; }[];
 }
 
 const INITIAL_HEALTH = 100;
@@ -70,6 +71,7 @@ export function useGameEngine() {
     level: 1,
     fallingSpeed: INITIAL_FALLING_SPEED,
     isPaused: false,
+    paragraphCount: 0,
     currentRunKeystrokes: [],
     ghostData: [],
   });
@@ -146,7 +148,8 @@ export function useGameEngine() {
     stopTimers();
     const words = pickParagraph(difficulty, theme);
     const now = Date.now();
-    const storedGhost = JSON.parse(localStorage.getItem("neontype-ghost") || "[]");
+    const rawGhost = JSON.parse(localStorage.getItem("neontype-ghost") || "[]");
+    const storedGhost = rawGhost.length > 0 && typeof rawGhost[0] === "number" ? [] : rawGhost;
 
 
     setState({
@@ -173,6 +176,7 @@ export function useGameEngine() {
       level: 1,
       fallingSpeed: INITIAL_FALLING_SPEED,
       isPaused: false,
+      paragraphCount: 0,
       currentRunKeystrokes: [],
       ghostData: storedGhost,
     });
@@ -255,7 +259,7 @@ export function useGameEngine() {
       let maxCombo = prev.maxCombo;
       let comboMeter = prev.comboMeter;
       let isSuperSaiyan = prev.isSuperSaiyan;
-      let currentRunKeystrokes = [...prev.currentRunKeystrokes];
+      const currentRunKeystrokes = [...prev.currentRunKeystrokes];
 
       if (isCorrect) {
         correctChars++;
@@ -263,7 +267,13 @@ export function useGameEngine() {
         maxCombo = Math.max(maxCombo, combo);
 
         if (prev.startTime) {
-          currentRunKeystrokes.push(Date.now() - prev.startTime);
+          const localCharIndex = prev.words.slice(0, prev.currentWordIndex).reduce((acc, w) => acc + w.length + 1, 0) + prev.typedChars.length;
+
+          currentRunKeystrokes.push({ 
+            p: prev.paragraphCount,
+            c: localCharIndex,
+            t: Date.now() - prev.startTime,
+           });
         }
         onKeyCorrectRef.current?.();
 
@@ -306,11 +316,13 @@ export function useGameEngine() {
           }, SUPER_SAIYAN_DURATION);
         }
 
+        let paragraphCount = prev.paragraphCount
         let words = prev.words;
         let currentWordIndex = nextIndex;
         if (nextIndex >= prev.words.length) {
           words = pickParagraph(prev.difficulty, prev.theme);
           currentWordIndex = 0;
+          paragraphCount++;
         }
         return {
           ...prev,
@@ -330,6 +342,7 @@ export function useGameEngine() {
           level,
           fallingSpeed: Math.max(800, INITIAL_FALLING_SPEED - level * 200),
           currentRunKeystrokes,
+          paragraphCount,
         };
       }
 
@@ -345,6 +358,7 @@ export function useGameEngine() {
         comboMeter,
         isSuperSaiyan,
         currentRunKeystrokes,
+        paragraphCount: prev.paragraphCount,
       };
     });
   }, []);

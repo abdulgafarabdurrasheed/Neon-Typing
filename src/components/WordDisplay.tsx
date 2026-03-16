@@ -25,31 +25,46 @@ export default function WordDisplay({ state }: Props) {
       const now = Date.now();
       const currentElapsed = now - state.startTime!;
 
-      let ghostCharIndex = state.ghostData.findIndex(
-        (time) => time > currentElapsed,
-      );
+      let nextGhostIdx = state.ghostData.findIndex((g) => g.t > currentElapsed);
+      let ghostFrame = null;
 
-      if (ghostCharIndex === -1) {
-        ghostCharIndex = state.ghostData.length;
+      if (nextGhostIdx === -1) {
+        ghostFrame = state.ghostData[state.ghostData.length - 1];
+      } else if (nextGhostIdx > 0) {
+        ghostFrame = state.ghostData[nextGhostIdx - 1];
       }
 
-      const previousGhosts = document.querySelectorAll(".char.ghost");
-      previousGhosts.forEach((el) => el.classList.remove("ghost"));
+      const previousGhosts = document.querySelectorAll('.char.ghost');
+      previousGhosts.forEach(el => el.classList.remove('ghost'));
 
-      const currentGhostEl = document.querySelector(
-        `span[data-char-index="${ghostCharIndex}"]`,
-      );
-      if (currentGhostEl) {
-        currentGhostEl.classList.add("ghost");
+      const radarEl = document.getElementById("ghost-radar");
+
+      if (ghostFrame) {
+        if (ghostFrame.p === state.paragraphCount) {
+          const currentGhostEl = document.querySelector(`span[data-char-index="${ghostFrame.c}"]`);
+          if (currentGhostEl) {
+            currentGhostEl.classList.add('ghost')
+          }
+          if (radarEl) radarEl.style.opacity = "0";
+        } else {
+            if (radarEl) {
+              radarEl.style.opacity = "1";
+              if (ghostFrame.p > state.paragraphCount) {
+                radarEl.innerText = `👻 Ghost is ${ghostFrame.p - state.paragraphCount} paragraph(s) ahead`;
+              } else {
+                radarEl.innerText = `👻 Ghost is ${state.paragraphCount - ghostFrame.p} paragraph(s) behind`;
+              }
+            }
+          }
       }
 
-      requestRef.current = requestAnimationFrame(animate);
+      requestRef.current = requestAnimationFrame(animate)
     };
 
     requestRef.current = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(requestRef.current);
-  }, [state.status, state.startTime, state.ghostData]);
+  }, [state.status, state.startTime, state.ghostData, state.paragraphCount]);
 
   const windowStart = Math.max(0, currentWordIndex - 1);
   const windowEnd = Math.min(words.length, currentWordIndex + 8);
@@ -59,6 +74,7 @@ export default function WordDisplay({ state }: Props) {
     .reduce((acc, w) => acc + w.length + 1, 0);
   return (
     <div className={`word-display ${isSuperSaiyan ? "super-saiyan-bg" : ""}`}>
+      <div id="ghost-radar" style={{ opacity: 0, transition: "opacity 0.3s", position: "absolute", top: "10px", right: "20px", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: "bold" }}></div>
       <div className="words-container">
         <AnimatePresence mode="popLayout">
           {(() => {
