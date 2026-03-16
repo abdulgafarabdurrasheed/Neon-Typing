@@ -237,6 +237,7 @@ const fantasy = {
     "you roll a natural twenty and land a critical strike right between the eyes of the beast",
     "the tavern is filled with the sound of clashing mugs and bards singing tales of old heroes",
     "you carefully pick the lock on the wooden chest hoping it is not actually a mimic disguise",
+    "the ancient prophecy foretells of a hero who will rise to defeat the dark lord and save the kingdom from eternal darkness",
   ].map(p => p.split(" ")),
 
   medium: [

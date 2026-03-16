@@ -25,6 +25,8 @@ export interface GameState {
   theme: Theme;
   heatmap: Record<string, { hits: number; misses: number }>;
   isPaused: boolean;
+  currentRunKeystrokes: number[];
+  ghostData: number[];
 }
 
 const INITIAL_HEALTH = 100;
@@ -68,6 +70,8 @@ export function useGameEngine() {
     level: 1,
     fallingSpeed: INITIAL_FALLING_SPEED,
     isPaused: false,
+    currentRunKeystrokes: [],
+    ghostData: [],
   });
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -128,6 +132,7 @@ export function useGameEngine() {
             words: prev.wordsCompleted,
           }),
         );
+        localStorage.setItem("neontype-ghost", JSON.stringify(prev.currentRunKeystrokes))
       }
       
       localStorage.setItem("neontype-last-wpm", wpm.toString());
@@ -141,6 +146,8 @@ export function useGameEngine() {
     stopTimers();
     const words = pickParagraph(difficulty, theme);
     const now = Date.now();
+    const storedGhost = JSON.parse(localStorage.getItem("neontype-ghost") || "[]");
+
 
     setState({
       heatmap: {},
@@ -166,6 +173,8 @@ export function useGameEngine() {
       level: 1,
       fallingSpeed: INITIAL_FALLING_SPEED,
       isPaused: false,
+      currentRunKeystrokes: [],
+      ghostData: storedGhost,
     });
 
     timerRef.current = setInterval(() => {
@@ -246,12 +255,18 @@ export function useGameEngine() {
       let maxCombo = prev.maxCombo;
       let comboMeter = prev.comboMeter;
       let isSuperSaiyan = prev.isSuperSaiyan;
+      let currentRunKeystrokes = [...prev.currentRunKeystrokes];
 
       if (isCorrect) {
         correctChars++;
         combo++;
         maxCombo = Math.max(maxCombo, combo);
+
+        if (prev.startTime) {
+          currentRunKeystrokes.push(Date.now() - prev.startTime);
+        }
         onKeyCorrectRef.current?.();
+
 
         if (combo > 0 && combo % 50 === 0) {
           onComboMilestoneRef.current?.(combo);
@@ -314,6 +329,7 @@ export function useGameEngine() {
           wordsCompleted,
           level,
           fallingSpeed: Math.max(800, INITIAL_FALLING_SPEED - level * 200),
+          currentRunKeystrokes,
         };
       }
 
@@ -328,6 +344,7 @@ export function useGameEngine() {
         maxCombo,
         comboMeter,
         isSuperSaiyan,
+        currentRunKeystrokes,
       };
     });
   }, []);

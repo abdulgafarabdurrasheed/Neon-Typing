@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 const STREAK_KEY = "neontype_streak";
 const LAST_PLAYED_KEY = "neontype_last_played";
@@ -26,7 +26,7 @@ export function useStreak() {
     }
   }, []);
 
-  const updateStreak = useCallback(() => {
+  const updateStreak = () => {
     const today = new Date().toDateString();
     const lastPlayed = localStorage.getItem(LAST_PLAYED_KEY);
     
@@ -43,7 +43,7 @@ export function useStreak() {
       localStorage.setItem(STREAK_KEY, newStreak.toString());
       localStorage.setItem(LAST_PLAYED_KEY, today);
     }
-  }, []);
+  };
 
   return { streak, updateStreak };
 }
