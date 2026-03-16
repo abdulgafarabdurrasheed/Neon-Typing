@@ -40,8 +40,12 @@ export default function WordDisplay({ state }: Props) {
       const radarEl = document.getElementById("ghost-radar");
 
       if (ghostFrame) {
-        if (ghostFrame.p === state.paragraphCount) {
-          const currentGhostEl = document.querySelector(`span[data-char-index="${ghostFrame.c}"]`);
+        const ghostTotalChars = ghostFrame.c;
+        const ghostLocal = ghostTotalChars - state.paragraphStartChar;
+        const currentParagraphLength = state.words.reduce((acc, w) => acc + w.length + 1, 0);
+
+        if (ghostLocal >= 0 && ghostLocal < currentParagraphLength) {
+          const currentGhostEl = document.querySelector(`span[data-char-index="${ghostLocal}"]`);
           if (currentGhostEl) {
             currentGhostEl.classList.add('ghost')
           }
@@ -49,10 +53,10 @@ export default function WordDisplay({ state }: Props) {
         } else {
             if (radarEl) {
               radarEl.style.opacity = "1";
-              if (ghostFrame.p > state.paragraphCount) {
-                radarEl.innerText = `👻 Ghost is ${ghostFrame.p - state.paragraphCount} paragraph(s) ahead`;
+              if (ghostLocal >= currentParagraphLength) {
+                radarEl.innerText = `👻 Ghost is typing a future paragraph`;
               } else {
-                radarEl.innerText = `👻 Ghost is ${state.paragraphCount - ghostFrame.p} paragraph(s) behind`;
+                radarEl.innerText = `👻 Ghost is in a previous paragraph`;
               }
             }
           }
@@ -64,7 +68,7 @@ export default function WordDisplay({ state }: Props) {
     requestRef.current = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(requestRef.current);
-  }, [state.status, state.startTime, state.ghostData, state.paragraphCount]);
+  }, [state.status, state.startTime, state.ghostData, state.paragraphCount, state.paragraphStartChar, state.words]);
 
   const windowStart = Math.max(0, currentWordIndex - 1);
   const windowEnd = Math.min(words.length, currentWordIndex + 8);

@@ -26,8 +26,9 @@ export interface GameState {
   heatmap: Record<string, { hits: number; misses: number }>;
   isPaused: boolean;
   paragraphCount: number;
-  currentRunKeystrokes: { p: number; c: number; t: number }[];
-  ghostData: { p: number; c: number; t: number; }[];
+  paragraphStartChar: number;
+  currentRunKeystrokes: { c: number; t: number }[];
+  ghostData: { c: number; t: number; }[];
 }
 
 const INITIAL_HEALTH = 100;
@@ -72,6 +73,7 @@ export function useGameEngine() {
     fallingSpeed: INITIAL_FALLING_SPEED,
     isPaused: false,
     paragraphCount: 0,
+    paragraphStartChar: 0,
     currentRunKeystrokes: [],
     ghostData: [],
   });
@@ -177,6 +179,7 @@ export function useGameEngine() {
       fallingSpeed: INITIAL_FALLING_SPEED,
       isPaused: false,
       paragraphCount: 0,
+      paragraphStartChar: 0,
       currentRunKeystrokes: [],
       ghostData: storedGhost,
     });
@@ -267,11 +270,8 @@ export function useGameEngine() {
         maxCombo = Math.max(maxCombo, combo);
 
         if (prev.startTime) {
-          const localCharIndex = prev.words.slice(0, prev.currentWordIndex).reduce((acc, w) => acc + w.length + 1, 0) + prev.typedChars.length;
-
           currentRunKeystrokes.push({ 
-            p: prev.paragraphCount,
-            c: localCharIndex,
+            c: correctChars,
             t: Date.now() - prev.startTime,
            });
         }
@@ -317,12 +317,16 @@ export function useGameEngine() {
         }
 
         let paragraphCount = prev.paragraphCount
+        let paragraphStartChar = prev.paragraphStartChar
         let words = prev.words;
         let currentWordIndex = nextIndex;
         if (nextIndex >= prev.words.length) {
           words = pickParagraph(prev.difficulty, prev.theme);
           currentWordIndex = 0;
           paragraphCount++;
+          // correctChars belongs to the current state update. 
+          // At this exact moment, all correctly typed chars of previous paragraphs are accounted for.
+          paragraphStartChar = correctChars;
         }
         return {
           ...prev,
@@ -343,6 +347,7 @@ export function useGameEngine() {
           fallingSpeed: Math.max(800, INITIAL_FALLING_SPEED - level * 200),
           currentRunKeystrokes,
           paragraphCount,
+          paragraphStartChar,
         };
       }
 
@@ -359,6 +364,7 @@ export function useGameEngine() {
         isSuperSaiyan,
         currentRunKeystrokes,
         paragraphCount: prev.paragraphCount,
+        paragraphStartChar: prev.paragraphStartChar,
       };
     });
   }, []);
