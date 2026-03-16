@@ -317,6 +317,35 @@ html, body {
   animation: char-wrong 0.15s ease-in-out;
 }
 
+.char.ghost {
+  position: relative;
+  transition: none;
+}
+
+.char.ghost::after {
+  content: "";
+  position: absolute;
+  inset: -2px 0 -2px 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  border-radius: 2px;
+  z-index: -1;
+  pointer-events: none;
+  animation: ghost-pulse 1s infinite alternative;
+}
+
+@keyframes ghost-pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+.char.correct.ghost::after {
+  background: rgba(0, 240, 255, 0.2);
+  border-bottom: 3px solid var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-cyan);
+}
+
 @keyframes char-wrong {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-3px); }

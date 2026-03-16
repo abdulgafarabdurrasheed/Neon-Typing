@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import type { GameState } from "../hooks/useGameEngine";
+import { useEffect, useRef } from "react";
 
 interface Props {
   state: GameState;
@@ -7,61 +8,113 @@ interface Props {
 
 export default function WordDisplay({ state }: Props) {
   const { words, currentWordIndex, typedChars, isSuperSaiyan } = state;
+  const requestRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (
+      state.status !== "playing" ||
+      !state.startTime ||
+      !state.ghostData ||
+      state.ghostData.length === 0
+    ) {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      return;
+    }
+
+    const animate = () => {
+      const now = Date.now();
+      const currentElapsed = now - state.startTime!;
+
+      let ghostCharIndex = state.ghostData.findIndex(
+        (time) => time > currentElapsed,
+      );
+
+      if (ghostCharIndex === -1) {
+        ghostCharIndex = state.ghostData.length;
+      }
+
+      const previousGhosts = document.querySelectorAll(".char.ghost");
+      previousGhosts.forEach((el) => el.classList.remove("ghost"));
+
+      const currentGhostEl = document.querySelector(
+        `span[data-char-index="${ghostCharIndex}"]`,
+      );
+      if (currentGhostEl) {
+        currentGhostEl.classList.add("ghost");
+      }
+
+      requestRef.current = requestAnimationFrame(animate);
+    };
+
+    requestRef.current = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(requestRef.current);
+  }, [state.status, state.startTime, state.ghostData]);
+
   const windowStart = Math.max(0, currentWordIndex - 1);
   const windowEnd = Math.min(words.length, currentWordIndex + 8);
   const visibleWords = words.slice(windowStart, windowEnd);
+  const charsBeforeWIndow = words
+    .slice(0, windowStart)
+    .reduce((acc, w) => acc + w.length + 1, 0);
   return (
     <div className={`word-display ${isSuperSaiyan ? "super-saiyan-bg" : ""}`}>
       <div className="words-container">
         <AnimatePresence mode="popLayout">
-          {visibleWords.map((word, i) => {
-            const actualIndex = windowStart + i;
-            const isCurrent = actualIndex === currentWordIndex;
-            const isPast = actualIndex < currentWordIndex;
-            const isFuture = actualIndex > currentWordIndex;
+          {(() => {
+            let runningCharIndex = charsBeforeWIndow;
+            return visibleWords.map((word, i) => {
+              const actualIndex = windowStart + i;
+              const isCurrent = actualIndex === currentWordIndex;
+              const isPast = actualIndex < currentWordIndex;
+              const isFuture = actualIndex > currentWordIndex;
 
-            return (
-              <motion.span
-                key={`${actualIndex}-${word}`}
-                className={`word ${isCurrent ? "current" : ""}
+              return (
+                <motion.span
+                  key={`${actualIndex}-${word}`}
+                  className={`word ${isCurrent ? "current" : ""}
                   ${isPast ? "past" : ""} ${isFuture ? "future" : ""}`}
-                initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                animate={{
-                  opacity: isCurrent ? 1 : isFuture ? 0.6 : 0.3,
-                  y: 0,
-                  scale: isCurrent ? 1.1 : 1,
-                }}
-                exit={{ opacity: 0, y: -30, scale: 0.5, filter: "blur(10px)" }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                layout
-              >
-                {isCurrent ? (
-                  <>
-                    {(word + " ").split("").map((char, ci) => {
-                      const isTyped = ci < typedChars.length;
-                      const isCorrect = isTyped && typedChars[ci] === char;
-                      const isWrong = isTyped && typedChars[ci] !== char;
-                      const isCursor = ci === typedChars.length;
+                  initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                  animate={{
+                    opacity: isCurrent ? 1 : isFuture ? 0.6 : 0.3,
+                    y: 0,
+                    scale: isCurrent ? 1.1 : 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: -30,
+                    scale: 0.5,
+                    filter: "blur(10px)",
+                  }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  layout
+                >
+                  {(word + " ").split("").map((char, ci) => {
+                    const absoluteIndex = runningCharIndex++;
 
-                      return (
-                        <span
-                          key={ci}
-                          className={`char
-                          ${isCorrect ? "correct" : ""}
-                          ${isWrong ? "wrong" : ""}
-                          ${isCursor ? "cursor" : ""}`}
-                        >
-                          {char === " " && isWrong ? typedChars[ci] : char === " " ? "\u00A0" : char}
-                        </span>
-                      );
-                    })}
-                  </>
-                ) : (
-                  word
-                )}
-              </motion.span>
-            );
-          })}
+                    const isTyped = isCurrent && ci < typedChars.length;
+                    const isCorrect = isTyped && typedChars[ci] === char;
+                    const isWrong = isTyped && typedChars[ci] !== char;
+                    const isCursor = isCurrent && ci === typedChars.length;
+
+                    return (
+                      <span
+                        key={ci}
+                        data-char-index={absoluteIndex}
+                        className={`char ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""} ${isCursor ? "cursor" : ""}`}
+                      >
+                        {char === " " && isWrong
+                          ? typedChars[ci]
+                          : char === " "
+                            ? "\u00A0"
+                            : char}
+                      </span>
+                    );
+                  })}
+                </motion.span>
+              );
+            });
+          })()}
         </AnimatePresence>
       </div>
     </div>
