@@ -25,8 +25,9 @@ interface Props {
   onNicknameUpdate?: () => void;
   onPollLeaderboard?: () => void;
   heatmap: Record<string, { hits: number; misses: number }>;
-  history: { time: number; wpm: number; accuracy: number }[];
-  errorLog: { time: number; expected: string; typed: string }[];
+  accuracyHistory: { charIndex: number; accuracy: number }[];
+  errorLog: { charIndex: number; expected: string; typed: string }[];
+  totalChars: number;
 }
 
 function getPercentile(wpm: number): number {
@@ -69,8 +70,9 @@ export default function EndScreen({
   onNicknameUpdate,
   onPollLeaderboard,
   heatmap,
-  history,
+  accuracyHistory,
   errorLog,
+  totalChars,
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
@@ -193,7 +195,11 @@ export default function EndScreen({
                 </div>
               </div>
 
-              <AccuracyGraph history={history} errorLog={errorLog} totalTime={elapsed}/>
+              <AccuracyGraph
+                accuracyHistory={accuracyHistory}
+                errorLog={errorLog}
+                totalChars={totalChars}
+              />
 
               <div className="nickname-section">
                 <span className="nickname-label">YOUR NAME:</span>

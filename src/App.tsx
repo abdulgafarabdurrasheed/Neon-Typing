@@ -278,7 +278,8 @@ function App() {
                 onNicknameUpdate={fetchLeaderboard}
                 onPollLeaderboard={() => fetchLeaderboard()}
                 heatmap={state.heatmap}
-                history={state.history}
+                accuracyHistory={state.accuracyHistory}
+                totalChars={state.totalChars}
                 errorLog={state.errorLog}
               />
             )}

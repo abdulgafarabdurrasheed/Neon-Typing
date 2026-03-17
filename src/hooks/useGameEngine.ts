@@ -308,7 +308,7 @@ export function useGameEngine() {
         }
       }
 
-      if (isNewKeyStroke) {
+      if (isNewKeystroke) {
         const currentAccuracy = Math.round((correctChars / totalChars) * 100);
         accuracyHistory.push({
           charIndex: totalChars,
