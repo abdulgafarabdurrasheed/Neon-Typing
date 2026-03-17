@@ -29,6 +29,8 @@ export interface GameState {
   paragraphStartChar: number;
   currentRunKeystrokes: { c: number; t: number }[];
   ghostData: { c: number; t: number; }[];
+  history: { time: number; wpm: number; accuracy: number; }[];
+  errorLog: { time: number; expected: string; typed: string }[];
 }
 
 const INITIAL_HEALTH = 100;
@@ -76,6 +78,8 @@ export function useGameEngine() {
     paragraphStartChar: 0,
     currentRunKeystrokes: [],
     ghostData: [],
+    history: [],
+    errorLog: [],
   });
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -182,6 +186,8 @@ export function useGameEngine() {
       paragraphStartChar: 0,
       currentRunKeystrokes: [],
       ghostData: storedGhost,
+      history: [],
+      errorLog: [],
     });
 
     timerRef.current = setInterval(() => {
@@ -191,8 +197,9 @@ export function useGameEngine() {
         const minutes = elapsed / 60;
         const wpm =
           minutes > 0 ? Math.round(prev.correctChars / 5 / minutes) : 0;
+        const accuracy = prev.totalChars > 0 ? Math.round((prev.correctChars / prev.totalChars) * 100) : 100;
 
-        return { ...prev, elapsed, wpm };
+        return { ...prev, elapsed, wpm, accuracy, history: [...prev.history, { time: elapsed, wpm, accuracy }] };
       });
     }, 500);
 
@@ -263,6 +270,7 @@ export function useGameEngine() {
       let comboMeter = prev.comboMeter;
       let isSuperSaiyan = prev.isSuperSaiyan;
       const currentRunKeystrokes = [...prev.currentRunKeystrokes];
+      const errorLog = [...prev.errorLog];
 
       if (isCorrect) {
         correctChars++;
@@ -288,6 +296,14 @@ export function useGameEngine() {
         comboMeter = Math.max(0, comboMeter - config.comboDrain);
         isSuperSaiyan = false;
         onKeyErrorRef.current?.();
+
+        if (prev.startTime && expectedChar && typedChar && isNewKeystroke) {
+          errorLog.push({
+            time: (Date.now() - prev.startTime) / 1000,
+            expected: expectedChar,
+            typed: typedChar,
+          });
+        }
       }
 
       if (newTypedChars === currentWord + " ") {
@@ -324,8 +340,6 @@ export function useGameEngine() {
           words = pickParagraph(prev.difficulty, prev.theme);
           currentWordIndex = 0;
           paragraphCount++;
-          // correctChars belongs to the current state update. 
-          // At this exact moment, all correctly typed chars of previous paragraphs are accounted for.
           paragraphStartChar = correctChars;
         }
         return {
@@ -348,6 +362,7 @@ export function useGameEngine() {
           currentRunKeystrokes,
           paragraphCount,
           paragraphStartChar,
+          errorLog,
         };
       }
 
@@ -365,6 +380,7 @@ export function useGameEngine() {
         currentRunKeystrokes,
         paragraphCount: prev.paragraphCount,
         paragraphStartChar: prev.paragraphStartChar,
+        errorLog,
       };
     });
   }, []);
