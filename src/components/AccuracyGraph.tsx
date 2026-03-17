@@ -50,16 +50,17 @@ export default function AccuracyGraph({ history, errorLog, totalTime }: Props) {
             const y = getY(point.accuracy);
             if (index === 0) ctx.moveTo(x, y);
             else ctx.lineTo(x, y);
+        });
 
-            ctx.strokeStyle = "#4df3ff";
-            ctx.lineWidth = 3;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#4df3ff";
-            ctx.lineJoin = "round";
-            ctx.stroke();
+        ctx.strokeStyle = "#4df3ff";
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "#4df3ff";
+        ctx.lineJoin = "round";
+        ctx.stroke();
 
-            ctx.shadowBlur = 0;
-            errorLog.forEach((err) => {
+        ctx.shadowBlur = 0;
+        errorLog.forEach((err) => {
                 const x = getX(err.time);
                 const nearestHistory = history.reduce((prev, curr) =>
                     Math.abs(curr.time - err.time) < Math.abs(prev.time - err.time) ? curr : prev
@@ -75,10 +76,10 @@ export default function AccuracyGraph({ history, errorLog, totalTime }: Props) {
                 ctx.stroke();
 
                 errorCoordinates.current.push({ x, y, data: err });
-            });
-        }, [history, errorLog, totalTime]);
+        });
+    }, [history, errorLog, totalTime]);
 
-        const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
             const canvas = canvasRef.current;
             if (!canvas) return;
             const rect = canvas.getBoundingClientRect();
@@ -147,6 +148,5 @@ export default function AccuracyGraph({ history, errorLog, totalTime }: Props) {
                     </div>
                 )}
             </div>
-        )
-    })
+        );
 }

@@ -7,6 +7,7 @@ import Leaderboard from "./Leaderboard";
 import { getNickname, setNickname } from "../hooks/useLeaderboard";
 import type { LeaderboardEntry } from "../hooks/useLeaderboard";
 import Heatmap from "./Heatmap"
+import AccuracyGraph from "./AccuracyGraph";
 
 interface Props {
   wpm: number;
@@ -24,6 +25,8 @@ interface Props {
   onNicknameUpdate?: () => void;
   onPollLeaderboard?: () => void;
   heatmap: Record<string, { hits: number; misses: number }>;
+  history: { time: number; wpm: number; accuracy: number }[];
+  errorLog: { time: number; expected: string; typed: string }[];
 }
 
 function getPercentile(wpm: number): number {
@@ -65,7 +68,9 @@ export default function EndScreen({
   currentUuid,
   onNicknameUpdate,
   onPollLeaderboard,
-  heatmap
+  heatmap,
+  history,
+  errorLog,
 }: Props) {
   const percentile = getPercentile(wpm);
   const rank = getRank(wpm);
@@ -187,6 +192,8 @@ export default function EndScreen({
                   </span>
                 </div>
               </div>
+
+              <AccuracyGraph history={history} errorLog={errorLog} totalTime={elapsed}/>
 
               <div className="nickname-section">
                 <span className="nickname-label">YOUR NAME:</span>

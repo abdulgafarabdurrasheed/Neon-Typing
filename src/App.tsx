@@ -278,6 +278,8 @@ function App() {
                 onNicknameUpdate={fetchLeaderboard}
                 onPollLeaderboard={() => fetchLeaderboard()}
                 heatmap={state.heatmap}
+                history={state.history}
+                errorLog={state.errorLog}
               />
             )}
           </AnimatePresence>
