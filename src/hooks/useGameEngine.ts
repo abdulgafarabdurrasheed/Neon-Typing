@@ -29,8 +29,8 @@ export interface GameState {
   paragraphStartChar: number;
   currentRunKeystrokes: { c: number; t: number }[];
   ghostData: { c: number; t: number; }[];
-  history: { time: number; wpm: number; accuracy: number; }[];
-  errorLog: { time: number; expected: string; typed: string }[];
+  accuracyHistory: { charIndex: number; accuracy: number; }[];
+  errorLog: { charIndex: number; expected: string; typed: string }[];
 }
 
 const INITIAL_HEALTH = 100;
@@ -78,7 +78,7 @@ export function useGameEngine() {
     paragraphStartChar: 0,
     currentRunKeystrokes: [],
     ghostData: [],
-    history: [],
+    accuracyHistory: [],
     errorLog: [],
   });
 
@@ -186,7 +186,7 @@ export function useGameEngine() {
       paragraphStartChar: 0,
       currentRunKeystrokes: [],
       ghostData: storedGhost,
-      history: [],
+      accuracyHistory: [],
       errorLog: [],
     });
 
@@ -195,13 +195,14 @@ export function useGameEngine() {
         if (prev.status !== "playing" || !prev.startTime || prev.isPaused) return prev;
         const elapsed = (Date.now() - prev.startTime) / 1000;
         const minutes = elapsed / 60;
-        const wpm =
-          minutes > 0 ? Math.round(prev.correctChars / 5 / minutes) : 0;
-        const accuracy = prev.totalChars > 0 ? Math.round((prev.correctChars / prev.totalChars) * 100) : 100;
-
-        return { ...prev, elapsed, wpm, accuracy, history: [...prev.history, { time: elapsed, wpm, accuracy }] };
+        const wpm = minutes > 0 ? Math.round(prev.correctChars / 5 / minutes) : 0;
+        const accuracy =
+          prev.totalChars > 0
+            ? Math.round((prev.correctChars / prev.totalChars) * 100)
+            : 100;
+        return { ...prev, elapsed, wpm, accuracy };
       });
-    }, 500);
+    }, 500)
 
     healthTimerRef.current = setInterval(() => {
       setState((prev) => {
@@ -271,6 +272,7 @@ export function useGameEngine() {
       let isSuperSaiyan = prev.isSuperSaiyan;
       const currentRunKeystrokes = [...prev.currentRunKeystrokes];
       const errorLog = [...prev.errorLog];
+      const accuracyHistory = [...prev.accuracyHistory];
 
       if (isCorrect) {
         correctChars++;
@@ -299,12 +301,22 @@ export function useGameEngine() {
 
         if (prev.startTime && expectedChar && typedChar && isNewKeystroke) {
           errorLog.push({
-            time: (Date.now() - prev.startTime) / 1000,
+            charIndex: totalChars,
             expected: expectedChar,
             typed: typedChar,
           });
         }
       }
+
+      if (isNewKeyStroke) {
+        const currentAccuracy = Math.round((correctChars / totalChars) * 100);
+        accuracyHistory.push({
+          charIndex: totalChars,
+          accuracy: currentAccuracy,
+        });
+      }
+
+      
 
       if (newTypedChars === currentWord + " ") {
         const nextIndex = prev.currentWordIndex + 1;
@@ -362,6 +374,7 @@ export function useGameEngine() {
           currentRunKeystrokes,
           paragraphCount,
           paragraphStartChar,
+          accuracyHistory,
           errorLog,
         };
       }
@@ -380,6 +393,7 @@ export function useGameEngine() {
         currentRunKeystrokes,
         paragraphCount: prev.paragraphCount,
         paragraphStartChar: prev.paragraphStartChar,
+        accuracyHistory,
         errorLog,
       };
     });
