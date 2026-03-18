@@ -20,6 +20,7 @@ import { useLeaderboard } from "./hooks/useLeaderboard";
 function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [shake, setShake] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [confettiEnabled, setConfettiEnabled] = useState(() => {
     return localStorage.getItem("neontype-confetti") == "false";
   })
@@ -68,7 +69,11 @@ function App() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (state.status === "gameover" && e.key === "Enter") startGame(state.difficulty, state.theme);
+      if (state.status === "gameover" && e.key === "Enter") {
+        setHasSubmitted(false);
+        startGame(state.difficulty, state.theme);
+      }
+
       if (state.status === "playing" && e.key === "Escape") {
         togglePause();
       }
@@ -81,7 +86,8 @@ function App() {
   const sound = useSoundEffects();
 
   useEffect(() => {
-    if (state.status === "gameover" && state.wpm > 0) {
+    if (state.status === "gameover" && state.wpm > 0 && !hasSubmitted) {
+      setHasSubmitted(true);
       submitScore({
         wpm: state.wpm,
         accuracy: state.accuracy,
@@ -92,7 +98,7 @@ function App() {
       });
       updateStreak();
     }
-  }, [state.status, state.wpm, state.accuracy, state.maxCombo, state.wordsCompleted, state.difficulty, state.theme, submitScore, updateStreak]);
+  }, [state.status, state.wpm, state.accuracy, state.maxCombo, state.wordsCompleted, state.difficulty, state.theme, submitScore, updateStreak, hasSubmitted]);
 
   useEffect(() => {
     onKeyCorrectRef.current = () => sound.playThock();
@@ -148,7 +154,7 @@ function App() {
     onGameOverRef.current = () => {
       sound.playGameOver();
     }
-  });
+  }, [sound, confettiEnabled, state.isSuperSaiyan, onKeyCorrectRef, onKeyErrorRef, onWordCompleteRef, onComboMaxRef, onComboMilestoneRef, onGameOverRef]);
 
   const onInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,6 +166,7 @@ function App() {
   );
 
   const handleDismissIntro = useCallback((difficulty: Difficulty, theme: Theme) => {
+    setHasSubmitted(false);
     setShowIntro(false);
     startGame(difficulty, theme);
     setTimeout(() => inputRef.current?.focus(), 100);
@@ -270,7 +277,10 @@ function App() {
                 elapsed={state.elapsed}
                 difficulty={state.difficulty}
                 theme={state.theme}
-                onRestart={(d, t) => startGame(d, t)}
+                onRestart={(d, t) => {
+                  setHasSubmitted(false);
+                  startGame(d, t);
+                }}
                 onChangeTheme={() => setShowIntro(true)}
                 leaderboardEntries={leaderboardEntries}
                 leaderboardLoading={leaderboardLoading}
