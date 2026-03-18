@@ -18,6 +18,7 @@ const THEME_PARTICLES: Record<Theme, { colors: string[]; scanColor: string }> = 
   underwater: { colors: ["#00e5ff", "#0091ea", "#40c4ff", "#00e676", "#80deea"], scanColor: "#00e5ff" },
   retro:     { colors: ["#00ff00", "#ff0000", "#ffff00", "#ff00ff", "#ffffff"], scanColor: "#00ff00" },
   fantasy:   { colors: ["#ffd700", "#ff4500", "#9370db", "#ffa500", "#ff69b4"], scanColor: "#ffd700" },
+  space:     { colors: ["#e0e0ff", "#b800ff", "#00ffff", "#ffaa00", "#4a00e0"], scanColor: "#474747" },
 };
 
 export default function BackgroundFX({ theme }: Props) {
