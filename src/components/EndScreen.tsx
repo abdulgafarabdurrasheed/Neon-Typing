@@ -83,7 +83,7 @@ export default function EndScreen({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isCopying, setIsCopying] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [viewState, setViewState] = useState<"stats" | "leaderboard" | "heatmap">("stats");
+  const [viewState, setViewState] = useState<"stats" | "leaderboard" | "heatmap" | "accuracy graph">("stats");
 
   const handleCopyImage = async () => {
     if (!cardRef.current) return;
@@ -113,7 +113,7 @@ export default function EndScreen({
     if (!onPollLeaderboard) return;
     const interval = setInterval(() => {
       onPollLeaderboard();
-    }, 15000);
+    }, 15000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000);
     return () => clearInterval(interval);
   }, [onPollLeaderboard]);
 
@@ -195,12 +195,6 @@ export default function EndScreen({
                 </div>
               </div>
 
-              <AccuracyGraph
-                accuracyHistory={accuracyHistory}
-                errorLog={errorLog}
-                totalChars={totalChars}
-              />
-
               <div className="nickname-section">
                 <span className="nickname-label">YOUR NAME:</span>
                 {editingName ? (
@@ -277,6 +271,9 @@ export default function EndScreen({
                   <button className="share-btn" onClick={() => setViewState("heatmap")}>
                     VIEW HEATMAP
                   </button>
+                   <button className="share-btn" onClick={() => setViewState("accuracy graph")}>
+                    VIEW ACCURACY GRAPH
+                  </button>
                 </div>
               </div>
             </>
@@ -302,6 +299,21 @@ export default function EndScreen({
               </button>
               <div style={{ marginTop: "1rem" }}>
                 <Heatmap heatmap={heatmap} />
+              </div>
+            </div>
+          )}
+
+          {viewState === "accuracy graph" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", width: "100%" }}>
+              <button className="restart-btn" onClick={() => setViewState("stats")}>
+                BACK TO STATS
+              </button>
+              <div style={{ width: "100%", marginTop: "1rem" }}>
+                <AccuracyGraph
+                  accuracyHistory={accuracyHistory}
+                  errorLog={errorLog}
+                  totalChars={totalChars}
+                />
               </div>
             </div>
           )}

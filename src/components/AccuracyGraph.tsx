@@ -41,7 +41,8 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
         const graphHeight = height - paddingY - paddingBottom;
 
         const getX = (charCount: number) => paddingX + (charCount / Math.max(1, totalChars)) * graphWidth;
-        const minAcc = Math.max(0, Math.min(80, ...accuracyHistory.map((h) => h.accuracy)) - 5);
+        const lowest = Math.min(...accuracyHistory.map((h) => h.accuracy));
+        const minAcc = Math.max(0, Math.min(95, lowest - 2));
         const maxAcc = 100;
         const getY = (acc: number) => {
             const ratio = (acc - minAcc) / Math.max(1, maxAcc - minAcc);
@@ -78,8 +79,8 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
       else ctx.lineTo(x, y);
     });
     ctx.strokeStyle = "#4df3ff";
-    ctx.lineWidth = 3;
-    ctx.shadowBlur = 10;
+    ctx.lineWidth = 6;
+    ctx.shadowBlur = 15;
     ctx.shadowColor = "#4df3ff";
     ctx.lineJoin = "round";
     ctx.stroke();
@@ -137,11 +138,20 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
       <h3 style={{ color: "var(--neon-blue)", opacity: 0.8, fontSize: "1rem", marginBottom: "10px" }}>
         ACCURACY TIMELINE (KEYSTROKES)
       </h3>
-      
-      <canvas
+      <div
+        style={{
+          width: "100%",
+          overflowX: "auto",
+          paddingBottom: "10px",
+          borderRadius: "8px",
+          border: "1px solid rgba(77, 243, 255, 0.2)",
+          background: "rgba(0,0,0,0.3)"
+        }}
+      >
+        <canvas
         ref={canvasRef}
         width={800}
-        height={300}
+        height={400}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setHoveredError(null)}
         style={{
@@ -153,6 +163,7 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
           cursor: "crosshair"
         }}
       />
+      </div>
 
       {hoveredError && (
         <div
