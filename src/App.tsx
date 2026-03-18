@@ -276,7 +276,6 @@ function App() {
                 leaderboardLoading={leaderboardLoading}
                 currentUuid={currentUuid}
                 onNicknameUpdate={fetchLeaderboard}
-                onPollLeaderboard={() => fetchLeaderboard()}
                 heatmap={state.heatmap}
                 accuracyHistory={state.accuracyHistory}
                 totalChars={state.totalChars}

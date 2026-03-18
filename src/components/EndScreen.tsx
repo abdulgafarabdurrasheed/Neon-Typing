@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import type { Difficulty, Theme } from "../data/paragraphs";
 import { THEMES } from "../data/paragraphs";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { toBlob } from "html-to-image";
 import Leaderboard from "./Leaderboard";
 import { getNickname, setNickname } from "../hooks/useLeaderboard";
@@ -23,7 +23,6 @@ interface Props {
   leaderboardLoading: boolean;
   currentUuid: string;
   onNicknameUpdate?: () => void;
-  onPollLeaderboard?: () => void;
   heatmap: Record<string, { hits: number; misses: number }>;
   accuracyHistory: { charIndex: number; accuracy: number }[];
   errorLog: { charIndex: number; expected: string; typed: string }[];
@@ -68,7 +67,7 @@ export default function EndScreen({
   leaderboardLoading,
   currentUuid,
   onNicknameUpdate,
-  onPollLeaderboard,
+
   heatmap,
   accuracyHistory,
   errorLog,
