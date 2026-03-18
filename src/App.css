@@ -946,6 +946,45 @@ html, body {
   --danger: #dc143c;
 }
 
+.app.theme-space {
+  --neon-green: #e0e0ff;
+  --neon-pink: #b800ff;
+  --neon-cyan: #00ffff;
+  --neon-yellow: #ffaa00;
+  --neon-purple: #4a00e0;
+  --bg-primary: #05050a;
+  --bg-secondary: #0b0b1a;
+  --bg-card: #121226;
+  --text-dim: #4a4a75;
+  --danger: #ff2244;
+}
+
+.app.theme-space::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 85% 85%, rgba(0, 255, 255, 0.03) 0%, transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(184, 0, 255, 0.02) 0%, transparent 60%);
+  animation: space-pulse 10s ease-in-out infinite alternate;
+}
+
+@keyframes space-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.05); opacity: 1; }
+}
+
+.app.theme-space .scanlines {
+  background: none;
+}
+.app.theme-space .vignette {
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.9) 100%);
+}
+
 .app.theme-underwater::after {
   content: "";
   position: fixed;

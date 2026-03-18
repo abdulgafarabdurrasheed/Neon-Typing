@@ -1,5 +1,5 @@
 export type Difficulty = "easy" | "medium" | "hard";
-export type Theme = "cyberpunk" | "underwater" | "retro" | "fantasy";
+export type Theme = "cyberpunk" | "underwater" | "retro" | "fantasy" | "space";
 
 export interface ThemeConfig {
   id: Theme;
@@ -37,6 +37,13 @@ export const THEMES: ThemeConfig[] = [
     tagline: "// cast your spell",
     gameOverTitle: "YOU HAVE FALLEN",
     overdriveLabel: "DRAGON'S RAGE"
+  },
+  {
+    id: "space",
+    name: "OUTER SPACE",
+    tagline: "// reach for the stars",
+    gameOverTitle: "SPACESHIP CRASHED",
+    overdriveLabel: "SUPER NOVA"
   }
 ]
 
@@ -278,6 +285,49 @@ const fantasy = {
   ].map(p => p.split(" ")),
 }
 
-const paragraphs: Record<Theme, Record<Difficulty, string[][]>> = { cyberpunk, underwater, retro, fantasy };
+const space = {
+  easy: [
+    "the stars twinkle in the vast expanse of space like distant beacons of hope and mystery",
+    "the spaceship glides silently through the void propelled by powerful engines and guided by advanced navigation systems",
+    "the astronaut gazes out the window at the breathtaking view of Earth a fragile blue marble suspended in the darkness",
+    "the space station orbits the planet providing a home for scientists and explorers to conduct research and push the boundaries of human knowledge",
+    "the blackness of space is punctuated by the occasional flash of a distant supernova or the eerie glow of a nebula",
+    "the silence of space is broken only by the hum of the spaceship's systems and the occasional radio transmission from mission control",
+    "the vastness of space can be both awe inspiring and terrifying reminding us of our small place in the universe",
+    "the search for extraterrestrial life continues as scientists scan the skies for signs of intelligent civilizations beyond our solar system",
+    "the space race of the twentieth century was a defining moment in human history showcasing our integrity and determinationto explore the unknown and reach for the stars",
+    "the first human to set foot on Mars will be remembered as a pioneer and a hero inspiring generations to come",
+    "the discovery of a new exoplanet in the habitable zone of a nearby star has sparked excitement about the possibility of finding life beyond Earth",
+    "the space shuttle launches into the sky leaving a trail of fire and smoke as it ascends into orbit",
+    "the international space station is a symbol of global cooperation and scientific advancement orbiting the Earth at an altitude of approximately 400 kilometers",
+    "the cosmic microwave background radiation provides a snapshot of the early universe offering clues about its origins and evolution",
+    "the search for dark matter and dark energy continues as scientists strive to understand the fundamental nature of the universe and its mysterious components",
+  ].map(p => p.split(" ")),
+
+  medium: [
+    "The Hubble Space Telescope's Wide Field Camera 3 captured a breathtaking image of the Eagle Nebula's Pillars of Creation, revealing intricate details of star-forming regions within the nebula.",
+    "The discovery of the exoplanet Proxima Centauri b, located in the habitable zone of the closest star to our solar system, has sparked excitement about the possibility of finding extraterrestrial life beyond Earth.",
+    "The cosmic microwave background radiation, a faint glow of light that fills the universe, provides a snapshot of the early universe just 380,000 years after the Big Bang, offering insights into its origins and evolution.",
+    "The search for dark matter and dark energy continues as scientists strive to understand the fundamental nature of the universe and its mysterious components, which together make up about 95 percent of the total mass-energy content of the cosmos.",
+    "The first human to set foot on Mars will be remembered as a pioneer and a hero, inspiring generations to come with their courage and determination in exploring the Red Planet and expanding humanity's presence in the solar system.",
+    "Mission log: Conducted extravehicular activity to repair damaged solar array. Successfully completed task with minor scratches on the suit.",
+    "The spacecraft's trajectory was adjusted using a gravity assist maneuver around Venus, increasing its velocity by 15 percent and reducing travel time to the outer planets.",
+    "Telemetry data indicates a micrometeoroid impact on the hull, causing a small breach that has been sealed with emergency patches. Pressure levels are stable.",
+    "The onboard AI system is analyzing data from the deep space probe, which has detected unusual readings from a nearby star system that may indicate the presence of an exoplanet.",
+  ].map(p => p.split(" ")),
+
+  hard: [
+    "SPACEWALKER_01: EVA suit integrity at 98.7% | Oxygen supply at 75% | Tether secure.",
+    "Orbit correction required! Vector velocity is currently 7.8km/s. Adjust by +0.02km/s to avoid debris field 4B.",
+    "Apollo_11 logged: [ Houston, Tranquility Base here. The Eagle has landed. ] Time: 20:17:40 UTC.",
+    "Initializing warp sequence: Calculate coordinate vectors ( X: -42.87, Y: 11.09, Z: 89.21 ) before engaging hyperdrive!",
+    "Dark matter density mapping complete. Variance = 4.2e-9%. Background radiation indicates imminent localized gravitational shear.",
+    "// SYS_ALERT: Solar flare detected at stellar coordinates M-Type! Shielding down to 42%.",
+    "if (velocity > speedOfLight) { engageRelativityDampeners(); } else { maintainThrust(); }",
+    "Asteroid class C-Type approaches at Mach 14. Deploying automated defense lasers [=======||> ]",
+  ].map(p => p.split(" ")),
+}
+
+const paragraphs: Record<Theme, Record<Difficulty, string[][]>> = { cyberpunk, underwater, retro, fantasy, space };
 
 export default paragraphs;
