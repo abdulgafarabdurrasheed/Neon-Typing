@@ -284,6 +284,7 @@ function App() {
                 onChangeTheme={() => setShowIntro(true)}
                 leaderboardEntries={leaderboardEntries}
                 leaderboardLoading={leaderboardLoading}
+                onRefreshLeaderboard={() => fetchLeaderboard()}
                 currentUuid={currentUuid}
                 onNicknameUpdate={fetchLeaderboard}
                 heatmap={state.heatmap}

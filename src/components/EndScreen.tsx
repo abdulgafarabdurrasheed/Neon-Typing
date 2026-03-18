@@ -27,6 +27,7 @@ interface Props {
   accuracyHistory: { charIndex: number; accuracy: number }[];
   errorLog: { charIndex: number; expected: string; typed: string }[];
   totalChars: number;
+  onRefreshLeaderboard: () => void;
 }
 
 function getPercentile(wpm: number): number {
@@ -67,7 +68,7 @@ export default function EndScreen({
   leaderboardLoading,
   currentUuid,
   onNicknameUpdate,
-
+  onRefreshLeaderboard,
   heatmap,
   accuracyHistory,
   errorLog,
@@ -273,9 +274,14 @@ export default function EndScreen({
 
           {viewState === "leaderboard" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", width: "100%" }}>
-              <button className="restart-btn" onClick={() => setViewState("stats")}>
-                BACK TO STATS
-              </button>
+              <div style={{ display: "flex", gap: "1rem", width: "100%", justifyContent: "center" }}>
+                <button className="restart-btn" onClick={() => setViewState("stats")}>
+                  BACK TO STATS
+                </button>
+                <button className="share-btn" onClick={onRefreshLeaderboard} disabled={leaderboardLoading}>
+                  {leaderboardLoading ? "REFRESHING..." : "REFRESH LEADERBOARD"}
+                </button>
+              </div>
               <Leaderboard
                 entries={leaderboardEntries}
                 loading={leaderboardLoading}
