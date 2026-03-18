@@ -109,13 +109,6 @@ export default function EndScreen({
     }
   };
 
-  useEffect(() => {
-    if (!onPollLeaderboard) return;
-    const interval = setInterval(() => {
-      onPollLeaderboard();
-    }, 15000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000);
-    return () => clearInterval(interval);
-  }, [onPollLeaderboard]);
 
   const handleNicknameSubmit = async () => {
     await setNickname(nickname, currentUuid);
