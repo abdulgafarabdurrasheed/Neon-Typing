@@ -49,20 +49,27 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
             return paddingY + graphHeight - ratio * graphHeight;
         }
 
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
     ctx.font = "12px var(--font-mono, monospace)";
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
     
-    ctx.fillText("100%", paddingX - 10, getY(100));
-    ctx.fillText(`${Math.round((100 + minAcc) / 2)}%`, paddingX - 10, getY((100 + minAcc) / 2));
-    ctx.fillText(`${minAcc}%`, paddingX - 10, getY(minAcc));
+    for (let i = minAcc; i <= 100; i += 2) {
+      ctx.fillText(`${i}%`, paddingX - 10, getY(i));
+      ctx.beginPath();
+      ctx.moveTo(paddingX, getY(i));
+      ctx.lineTo(width, getY(i));
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+      ctx.stroke();
+    }
 
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.fillText("0", paddingX, height - paddingBottom + 10);
-    ctx.fillText(`${Math.round(totalChars / 2)}`, paddingX + graphWidth / 2, height - paddingBottom + 10);
-    ctx.fillText(`${totalChars}`, paddingX + graphWidth, height - paddingBottom + 10);
+
+    for (let i = 0; i <= totalChars; i += 10) {
+      const cx = getX(i);
+      ctx.fillText(`${i}`, cx, height - paddingBottom + 10)
+    }
 
     ctx.beginPath();
     ctx.moveTo(paddingX, height - paddingBottom);
@@ -172,20 +179,18 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
         }}
       >
         <canvas
-        ref={canvasRef}
-        width={800}
-        height={400}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setHoveredError(null)}
-        style={{
-          width: "100%",
-          height: "auto",
-          background: "rgba(0,0,0,0.3)",
-          border: "1px solid rgba(77, 243, 255, 0.2)",
-          borderRadius: "8px",
-          cursor: "crosshair"
-        }}
-      />
+          ref={canvasRef}
+          width={Math.max(800, totalChars * 15)}
+          height={450}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setHoveredError(null)}
+          style={{
+            minWidth: "100%",
+            height: "450px",
+            background: "transparent",
+            display: "block"
+          }}
+        />
       </div>
 
       {hoveredError && (

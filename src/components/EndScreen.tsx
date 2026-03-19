@@ -302,11 +302,25 @@ export default function EndScreen({
           )}
 
           {viewState === "accuracy graph" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center", width: "100%" }}>
-              <button className="restart-btn" onClick={() => setViewState("stats")}>
-                BACK TO STATS
-              </button>
-              <div style={{ width: "100%", marginTop: "1rem" }}>
+            <div style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              display: "flex",
+              flexDirection: "column",
+              width: "100vw",
+              height: "100vh",
+              background: "rgba(10, 10, 15, 0.98)",
+              zIndex: 9999,
+              padding: "3rem",
+              boxSizing: "border-box" }}
+            >
+              <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: "1rem" }}>
+                <button className="restart-btn" onClick={() => setViewState("stats")}>
+                  BACK TO STATS
+                </button>
+              </div>
+              <div style={{ width: "100%", flexGrow: 1 }}>
                 <AccuracyGraph
                   accuracyHistory={accuracyHistory}
                   errorLog={errorLog}
