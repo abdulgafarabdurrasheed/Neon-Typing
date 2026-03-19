@@ -72,11 +72,34 @@ export default function AccuracyGraph({ accuracyHistory, errorLog, totalChars }:
     ctx.stroke();
 
     ctx.beginPath();
+
+    const tension = 0.25
     accuracyHistory.forEach((point, index) => {
       const x = getX(point.charIndex);
       const y = getY(point.accuracy);
       if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      else {
+        const prev = accuracyHistory[index - 1];
+        const prevPrev = index > 1 ? accuracyHistory[index - 2] : prev;
+        const next = index < accuracyHistory.length - 1 ? accuracyHistory[index + 1] : point;
+
+        const x0 = getX(prevPrev.charIndex);
+        const y0 = getY(prevPrev.accuracy);
+        const x1 = getX(prev.charIndex);
+        const y1 = getY(prev.accuracy);
+        const x2 = x;
+        const y2 = y;
+        const x3 = getX(next.charIndex);
+        const y3 = getY(next.accuracy);
+
+        const cp1x = x1 + (x2 - x0) * tension;
+        const cp1y = y1 + (y2 - y0) * tension;
+
+        const cp2x = x2 - (x3 - x1) * tension;
+        const cp2y = y2 - (y3 - y1) * tension;
+
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2);
+      }
     });
     ctx.strokeStyle = "#4df3ff";
     ctx.lineWidth = 6;
